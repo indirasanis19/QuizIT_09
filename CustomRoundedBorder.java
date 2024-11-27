@@ -12,7 +12,7 @@ public class CustomRoundedBorder implements Border {
         this.color = color;
     }
 
-    // Method untuk menggambar border dengan sudut melengkung
+    // Method untuk menggambar border dengan rounded corner
     @Override
     public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
         Graphics2D g2d = (Graphics2D) g.create();

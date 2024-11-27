@@ -92,7 +92,7 @@ public class QuizITGUI {
         userInfoPanel.add(userPointsLabel);   
         headerPanel.add(userInfoPanel, BorderLayout.EAST);
 
-       // Panel konten
+        // Panel konten
         JPanel contentPanel = new JPanel();
         contentPanel.setBackground(Color.WHITE);
         contentPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10)); 
