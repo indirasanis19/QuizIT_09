@@ -7,7 +7,7 @@ public class QuizITGUI {
 
     public static void main(String[] args) {
         // Membuat frame utama
-        JFrame frame = new JFrame("Two Panel Layout");
+        JFrame frame = new JFrame("QuizIT");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLayout(new BorderLayout());
@@ -37,7 +37,7 @@ public class QuizITGUI {
         sidebarpanel.add(createSidebarButton("Profile", "D:\\PBO\\QuizIT_09\\Image\\person-outline.png"));
         sidebarpanel.add(Box.createVerticalGlue()); 
         sidebarpanel.add(Box.createRigidArea(new Dimension(0, 10))); 
-        sidebarpanel.add(createSidebarButton("Logout", "icon_logout.png")); 
+        sidebarpanel.add(createSidebarButton("Logout", "D:\\PBO\\QuizIT_09\\Image\\Logout.png")); 
         sidebarpanel.add(Box.createRigidArea(new Dimension(0, 30))); 
 
         // Panel kanan
@@ -69,7 +69,7 @@ public class QuizITGUI {
         nameIdPanel.setBackground(new Color(0, 0, 0, 0)); 
 
         // Add user name and ID labels with padding
-        JLabel userNameLabel = new JLabel("Rumi Aktar");
+        JLabel userNameLabel = new JLabel("Elsa");
         userNameLabel.setForeground(Color.WHITE);
         userNameLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10)); 
 
@@ -80,7 +80,7 @@ public class QuizITGUI {
         nameIdPanel.add(userNameLabel); 
         nameIdPanel.add(userIdLabel);    
 
-        JLabel userPointsLabel = new JLabel("💎 160");
+        JLabel userPointsLabel = new JLabel("💎 0");
         userPointsLabel.setForeground(Color.YELLOW); 
         userPointsLabel.setBorder(BorderFactory.createEmptyBorder(10, 50, 0, 30)); 
 
@@ -89,11 +89,33 @@ public class QuizITGUI {
         userInfoPanel.add(userPointsLabel);   
         headerPanel.add(userInfoPanel, BorderLayout.EAST);
 
-        // Panel konten
+       // Panel konten
         JPanel contentPanel = new JPanel();
-        contentPanel.setBackground(Color.WHITE); 
-        contentPanel.add(new JLabel("Konten di sini", SwingConstants.CENTER)); 
+        contentPanel.setBackground(Color.WHITE);
+        contentPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10)); 
+        // Panel untuk search bar
+        JPanel searchPanel = new JPanel(new BorderLayout()); 
+        searchPanel.setPreferredSize(new Dimension(390, 30)); 
+        searchPanel.setBackground(Color.WHITE);
+        searchPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK)); 
 
+        // JTextField (search field)
+        JTextField searchField = new JTextField();
+        searchField.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 35)); 
+        searchField.setPreferredSize(new Dimension(380, 30)); 
+
+        // Ikon search 
+        ImageIcon searchIcon = new ImageIcon("D:\\PBO\\QuizIT_09\\Image\\search-outline.png"); 
+        JLabel searchIconLabel = new JLabel(searchIcon); 
+        searchIconLabel.setPreferredSize(new Dimension(30, 30)); 
+        searchIconLabel.setHorizontalAlignment(SwingConstants.CENTER); 
+        searchIconLabel.setBackground(Color.WHITE); 
+        searchIconLabel.setOpaque(true);
+
+        // Tambahkan JTextField ke kiri dan ikon ke kanan
+        searchPanel.add(searchField, BorderLayout.CENTER); 
+        searchPanel.add(searchIconLabel, BorderLayout.EAST); 
+        contentPanel.add(searchPanel); 
         // Menambahkan panel header dan konten ke mainPanel
         mainPanel.add(headerPanel, BorderLayout.NORTH); 
         mainPanel.add(contentPanel, BorderLayout.CENTER); 
