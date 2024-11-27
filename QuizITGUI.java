@@ -17,11 +17,8 @@ public class QuizITGUI {
         sidebarpanel.setBackground(new Color(46, 7, 63)); 
         sidebarpanel.setPreferredSize(new Dimension(200, 0)); 
         sidebarpanel.setLayout(new BoxLayout(sidebarpanel, BoxLayout.Y_AXIS)); 
-
-        // Menambahkan jarak 30 piksel sebelum titleLabel
         sidebarpanel.add(Box.createRigidArea(new Dimension(0, 30))); 
 
-        // Mengubah JLabel menjadi "QuizIT" dan mengatur warnanya menjadi oranye
         JLabel titleLabel = new JLabel("QuizIT", SwingConstants.CENTER);
         titleLabel.setForeground(Color.ORANGE);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 34)); 
@@ -38,7 +35,7 @@ public class QuizITGUI {
         sidebarpanel.add(createSidebarButton("Appearance", "icon_appearance.png"));
         sidebarpanel.add(Box.createRigidArea(new Dimension(0, 10))); 
         sidebarpanel.add(createSidebarButton("Profile", "D:\\PBO\\QuizIT_09\\Image\\person-outline.png"));
-        sidebarpanel.add(Box.createVerticalGlue()); // Menjaga tombol di atas
+        sidebarpanel.add(Box.createVerticalGlue()); 
         sidebarpanel.add(Box.createRigidArea(new Dimension(0, 10))); 
         sidebarpanel.add(createSidebarButton("Logout", "icon_logout.png")); 
         sidebarpanel.add(Box.createRigidArea(new Dimension(0, 30))); 
@@ -52,7 +49,45 @@ public class QuizITGUI {
         JPanel headerPanel = new JPanel();
         headerPanel.setBackground(new Color(62, 34, 75)); 
         headerPanel.setPreferredSize(new Dimension(150, 80)); 
-        headerPanel.add(new JLabel("Header", SwingConstants.CENTER)); 
+        headerPanel.setLayout(new BorderLayout());
+
+        // New panel for user info
+        JPanel userInfoPanel = new JPanel();
+        userInfoPanel.setBackground(new Color(62, 34, 75)); 
+        userInfoPanel.setLayout(new FlowLayout(FlowLayout.RIGHT)); 
+
+        // Adding user info components
+        ImageIcon profileIcon = new ImageIcon("D:\\\\PBO\\\\QuizIT_09\\\\Image\\\\person-outline.png"); 
+        JLabel userProfileLabel = new JLabel(profileIcon);
+        userProfileLabel.setPreferredSize(new Dimension(40, 40)); 
+        userProfileLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10)); 
+
+
+        // Create a panel for name and ID
+        JPanel nameIdPanel = new JPanel();
+        nameIdPanel.setLayout(new BoxLayout(nameIdPanel, BoxLayout.Y_AXIS)); 
+        nameIdPanel.setBackground(new Color(0, 0, 0, 0)); 
+
+        // Add user name and ID labels with padding
+        JLabel userNameLabel = new JLabel("Rumi Aktar");
+        userNameLabel.setForeground(Color.WHITE);
+        userNameLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10)); 
+
+        JLabel userIdLabel = new JLabel("ID-1809");
+        userIdLabel.setForeground(Color.WHITE);
+        userIdLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10)); 
+
+        nameIdPanel.add(userNameLabel); 
+        nameIdPanel.add(userIdLabel);    
+
+        JLabel userPointsLabel = new JLabel("💎 160");
+        userPointsLabel.setForeground(Color.YELLOW); 
+        userPointsLabel.setBorder(BorderFactory.createEmptyBorder(10, 50, 0, 30)); 
+
+        userInfoPanel.add(userProfileLabel); 
+        userInfoPanel.add(nameIdPanel);      
+        userInfoPanel.add(userPointsLabel);   
+        headerPanel.add(userInfoPanel, BorderLayout.EAST);
 
         // Panel konten
         JPanel contentPanel = new JPanel();
@@ -73,27 +108,26 @@ public class QuizITGUI {
 
     // Metode untuk membuat tombol sidebar
     private static JButton createSidebarButton(String text, String iconPath) {
-        JButton button = new JButton(text); // Menggunakan JButton
-        button.setIcon(new ImageIcon(iconPath)); // Mengatur ikon
+        JButton button = new JButton(text); 
+        button.setIcon(new ImageIcon(iconPath)); 
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
-        button.setPreferredSize(new Dimension(140, 40)); // Ukuran tombol
-        button.setMinimumSize(new Dimension(140, 40)); // Ukuran minimum tombol
-        button.setMaximumSize(new Dimension(140, 40)); // Ukuran maksimum tombol
-        button.setBackground(new Color(46, 7, 63)); // Warna default transparan
-        button.setBorderPainted(true); // Mengaktifkan border
-        button.setBorder(BorderFactory.createLineBorder(Color.ORANGE)); // Border oranye untuk semua tombol
-        button.setForeground(Color.WHITE); // Ubah warna teks tombol menjadi putih
+        button.setPreferredSize(new Dimension(140, 40)); 
+        button.setMinimumSize(new Dimension(140, 40)); 
+        button.setMaximumSize(new Dimension(140, 40)); 
+        button.setBackground(new Color(46, 7, 63)); 
+        button.setBorderPainted(true); 
+        button.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
+        button.setForeground(Color.WHITE); 
         button.setBorder(new CustomRoundedBorder(10, Color.ORANGE));
 
 
         // Menambahkan ActionListener untuk mengubah warna latar belakang saat diklik
         button.addActionListener(e -> {
-            // Reset the previously active button's background
             if (activeButton != null) {
-                activeButton.setBackground(new Color(46, 7, 63)); // Kembalikan warna latar belakang tombol aktif menjadi transparan
+                activeButton.setBackground(new Color(46, 7, 63)); 
             }
-            activeButton = button; // Set tombol yang baru diklik sebagai tombol aktif
-            button.setBackground(Color.ORANGE); // Ubah warna tombol yang baru diklik menjadi oranye
+            activeButton = button; 
+            button.setBackground(Color.ORANGE); 
         });
 
         return button;
