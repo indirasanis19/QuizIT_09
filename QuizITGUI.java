@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.sql.Connection;
 import javax.swing.*;
 
+
+
 public class QuizITGUI {
     // Variabel untuk menyimpan tombol aktif
     private static JButton activeButton = null;
@@ -163,7 +165,8 @@ public class QuizITGUI {
 
         // Membuat tombol untuk setiap kategori
         for (int i = 0; i < categories.length; i++) {
-            JButton categoryButton = new JButton(categories[i]);
+            final String category = categories[i]; // Create a final variable
+            JButton categoryButton = new JButton(category);
             categoryButton.setIcon(new ImageIcon(iconPaths[i]));
             categoryButton.setPreferredSize(new Dimension(90, 60));
             categoryButton.setBackground(Color.WHITE);
@@ -174,6 +177,26 @@ public class QuizITGUI {
             categoryButton.setFont(customFont);
             categoryButton.setMargin(new Insets(10, 50, 10, 10));
             categoryButton.setBorder(new CustomRoundedBorder(10, Color.GRAY));
+
+            // Mengatur ukuran font
+            categoryButton.setFont(customFont);
+            categoryButton.setMargin(new Insets(10, 50, 10, 10));
+            categoryButton.setBorder(new CustomRoundedBorder(10, Color.GRAY));
+
+            // Add action listener to switch to Quest class
+            categoryButton.addActionListener(e -> {
+            SwingUtilities.invokeLater(() -> {
+                // Membuka jendela Quest
+                new Quest(category, frame.getSize()).setVisible(true);
+
+             });
+        });
+
+    buttonPanel.add(categoryButton);
+
+            // Add action listener to switch to Quest class
+          //  categoryButton.addActionListener(e -> openQuest(category)); // Use the final variable
+
             buttonPanel.add(categoryButton);
         }
 
@@ -243,10 +266,10 @@ public class QuizITGUI {
 
         // panel kanan
         JPanel rightContentPanel = new JPanel();
-        rightContentPanel.setBackground(Color.LIGHT_GRAY);
-        JPanel rightContentPanelImage = new JPanel();
-        rightContentPanel.add(rightContentPanelImage);
+        rightContentPanel.setBackground(Color.WHITE);
+        rightContentPanel.setLayout(new BorderLayout());
 
+    
         // Menambahkan panel kiri dan kanan ke contentPanel
         contentPanel.add(leftContentPanel);
         contentPanel.add(rightContentPanel);
@@ -288,4 +311,6 @@ public class QuizITGUI {
 
         return button;
     }
+
+   
 }
