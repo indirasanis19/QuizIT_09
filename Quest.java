@@ -20,18 +20,18 @@ public class Quest extends JFrame {
         JProgressBar progressBar = new JProgressBar(0, 5);
         progressBar.setValue(1); // Set langkah awal
         progressBar.setStringPainted(true);
-        progressBar.setForeground(Color.YELLOW);
+        progressBar.setForeground(Color.white);
         progressBar.setBackground(Color.LIGHT_GRAY);
 
         // Panel Pertanyaan
         JPanel questionPanel = new JPanel(new BorderLayout());
-        questionPanel.setBackground(Color.YELLOW);
+        questionPanel.setBackground(Color.white);
 
         JLabel questionLabel = new JLabel(
                 "<html><div style='text-align:center;'>An interface design application that runs in the browser<br>with team-based collaborative design projects</div></html>",
                 SwingConstants.CENTER);
         questionLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        questionLabel.setForeground(Color.WHITE);
+        questionLabel.setForeground(Color.black);
         questionPanel.add(questionLabel, BorderLayout.CENTER);
 
         // Panel Opsi Jawaban
@@ -67,7 +67,7 @@ public class Quest extends JFrame {
         // Timer
         JLabel timerLabel = new JLabel("60", SwingConstants.CENTER);
         timerLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        timerLabel.setForeground(Color.YELLOW);
+        timerLabel.setForeground(Color.ORANGE);
 
         // Tambahkan tombol ke panel navigasi
         navigationPanel.add(previousButton, BorderLayout.WEST);
