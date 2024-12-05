@@ -11,7 +11,7 @@ public class Quest extends JFrame {
 
     private void initialize(Dimension mainFrameSize) {
         setTitle(category + " Quiz");
-        setSize(mainFrameSize); // Sesuaikan ukuran dengan frame utama
+        setSize(mainFrameSize); 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
