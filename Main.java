@@ -1,11 +1,8 @@
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import javax.swing.*;
 
 public class Main {
     private static JButton activeButton = null;
@@ -215,7 +212,7 @@ public class Main {
         };
         Font customFont = null;
         try {
-            customFont = Font.createFont(Font.TRUETYPE_FONT, new File("D:\\PBO\\QuizIT_09\\fonts\\Poppins-Bold.ttf"))
+            customFont = Font.createFont(Font.TRUETYPE_FONT, new File("fonts\\Poppins-Bold.ttf"))
                     .deriveFont(10f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(customFont);

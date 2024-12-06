@@ -1,5 +1,6 @@
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Data {
@@ -7,15 +8,19 @@ public class Data {
 
     // Method untuk menambahkan data ke tabel yang sesuai (tambah data soal dan pemain)
     public void addData(String table, Object... params) {
-        String query = "";
+        String queryInsert = "";
+        String queryCheck = "";
 
         if (table.equalsIgnoreCase("soal")) {
-            query = """
+            queryInsert = """
                     INSERT INTO soal (pertanyaan, pilihan_A, pilihan_B, pilihan_C, pilihan_D, jawaban_benar, kategori)
                     VALUES (?, ?, ?, ?, ?, ?, ?)
                     """;
+            queryCheck = """
+                    SELECT COUNT(*) FROM soal WHERE pertanyaan = ?
+                    """;
         } else if (table.equalsIgnoreCase("pemain")) {
-            query = """
+            queryInsert = """
                     INSERT INTO pemain (nama, skor_terakhir, skor_tertinggi, soal_terjawab, soal_benar, soal_salah, waktu_selesai)
                     VALUES (?, ?, ?, ?, ?, ?, ?)
                     """;
@@ -24,11 +29,24 @@ public class Data {
             return;
         }
 
-        try (PreparedStatement statement = conn.prepareStatement(query)) {
-            for (int i = 0; i < params.length; i++) {
-                statement.setObject(i + 1, params[i]);
+        try (PreparedStatement checkStatement = conn.prepareStatement(queryCheck)) {
+            checkStatement.setObject(1, params[0]);
+            ResultSet resultSet = checkStatement.executeQuery();
+            if (resultSet.next() && resultSet.getInt(1) > 0) {
+                System.out.println("Data sudah ada di tabel");
+                return;
             }
-            statement.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Gagal memeriksa data di tabel " + table + ".");
+            e.printStackTrace();
+            return;
+    }
+
+        try (PreparedStatement insertStatement = conn.prepareStatement(queryInsert)) {
+            for (int i = 0; i < params.length; i++) {
+                insertStatement.setObject(i + 1, params[i]);
+            }
+            insertStatement.executeUpdate();
             System.out.println("Data berhasil ditambahkan ke tabel " + table + "!");
         } catch (SQLException e) {
             System.err.println("Gagal menambahkan data ke tabel " + table + ".");
