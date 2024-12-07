@@ -191,8 +191,12 @@ public class Quest extends JFrame {
         String correctOption = questions.get(currentQuestionIndex).getCorrectOption();
 
         if (selectedOption.equals(correctOption)) {
+            Music correct = new Music("music//correct.wav", false);
+            correct.start();
             JOptionPane.showMessageDialog(this, "Correct!");
         } else {
+            Music wrong = new Music("music//wrong.wav", false);
+            wrong.start();
             JOptionPane.showMessageDialog(this, "Wrong!");
         }
     }
