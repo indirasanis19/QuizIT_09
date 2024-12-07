@@ -252,6 +252,8 @@ public class Main {
 
             categoryButton.addActionListener(e -> {
                 SwingUtilities.invokeLater(() -> {
+                    Music bgm = new Music("music//bgm.wav", false);
+                    bgm.start();
                     new Quest(category, mainFrame.getSize()).setVisible(true);
                     mainFrame.dispose();
                 });
