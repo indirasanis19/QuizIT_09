@@ -1,8 +1,8 @@
-import javax.swing.*;
 import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.*;
 
 public class Quest extends JFrame {
     private String category;
@@ -138,11 +138,12 @@ public class Quest extends JFrame {
     private void loadQuestions() {
         try (Connection connection = Koneksi.getConnection()) {
             if (connection != null) {
-                // Query untuk mengambil soal dari tabel 'soal'
-                String query = "SELECT * FROM soal";
-                Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(query);
-
+                // Query hanya mengambil soal berdasarkan kategori
+                String query = "SELECT * FROM soal WHERE kategori = ?";
+                PreparedStatement statement = connection.prepareStatement(query);
+                statement.setString(1, category);
+                ResultSet resultSet = statement.executeQuery();
+    
                 // Menambahkan soal ke dalam list
                 while (resultSet.next()) {
                     String questionText = resultSet.getString("pertanyaan");
@@ -151,12 +152,12 @@ public class Quest extends JFrame {
                     String optionC = resultSet.getString("pilihan_C");
                     String optionD = resultSet.getString("pilihan_D");
                     String correctOption = resultSet.getString("jawaban_benar");
-
+    
                     questions.add(new Question(questionText, optionA, optionB, optionC, optionD, correctOption));
                 }
                 progressBar.updateProgress(0);
-
-                System.out.println("Soal berhasil dimuat!");
+    
+                System.out.println("Soal berhasil dimuat untuk kategori: " + category);
             } else {
                 System.err.println("Koneksi ke database gagal.");
             }
@@ -169,8 +170,7 @@ public class Quest extends JFrame {
         if (index >= 0 && index < questions.size()) {
             Question question = questions.get(index);
             // questionLabel.setText(question.getQuestionText());
-            questionLabel.setText("<html><p style='width: 600px; word-wrap: break-word; text-align:center;'>"
-                    + question.getQuestionText() + "</p></html>");
+            questionLabel.setText("<html><p style='width: 600px; word-wrap: break-word; text-align:center;'>" + question.getQuestionText() + "</p></html>");
             optionA.setText("A. " + question.getOptionA());
             optionB.setText("B. " + question.getOptionB());
             optionC.setText("C. " + question.getOptionC());

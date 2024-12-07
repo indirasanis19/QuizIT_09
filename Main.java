@@ -1,11 +1,8 @@
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import javax.swing.*;
 
 public class Main {
     private static JButton activeButton = null;
@@ -87,7 +84,7 @@ public class Main {
         // Panel kanan (gambar maskot)
         JPanel rightPanel = new JPanel();
         rightPanel.setBackground(new Color(46, 7, 63));
-        JLabel mascotLabel = new JLabel(new ImageIcon("D:\\PBO\\QuizIT_09\\Image\\maskot 1.png"));
+        JLabel mascotLabel = new JLabel(new ImageIcon("Image\\maskot 1.png"));
         mascotLabel.setHorizontalAlignment(SwingConstants.CENTER);
         rightPanel.add(mascotLabel);
 
@@ -112,11 +109,11 @@ public class Main {
         sidebarPanel.add(Box.createRigidArea(new Dimension(0, 5)));
 
         sidebarPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-        sidebarPanel.add(createSidebarButton("Learn", "D:\\PBO\\QuizIT_09\\Image\\home-outline.png"));
+        sidebarPanel.add(createSidebarButton("Learn", "Image\\home-outline.png"));
         sidebarPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        sidebarPanel.add(createSidebarButton("Profile", "D:\\PBO\\QuizIT_09\\Image\\person-outline.png"));
+        sidebarPanel.add(createSidebarButton("Profile", "Image\\person-outline.png"));
         sidebarPanel.add(Box.createVerticalGlue());
-        sidebarPanel.add(createSidebarButton("Logout", "D:\\PBO\\QuizIT_09\\Image\\Logout.png"));
+        sidebarPanel.add(createSidebarButton("Logout", "Image\\Logout.png"));
         sidebarPanel.add(Box.createRigidArea(new Dimension(0, 30)));
 
         // Header
@@ -181,7 +178,7 @@ public class Main {
         searchField.setPreferredSize(new Dimension(500, 30));
 
         // Ikon search
-        ImageIcon searchIcon = new ImageIcon("D:\\PBO\\QuizIT_09\\Image\\search-outline.png");
+        ImageIcon searchIcon = new ImageIcon("Image\\search-outline.png");
         JLabel searchIconLabel = new JLabel(searchIcon);
         searchIconLabel.setPreferredSize(new Dimension(30, 30));
         searchIconLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -206,16 +203,16 @@ public class Main {
         // Daftar kategori dan ikon
         String[] categories = { "HTML", "CSS", "C++", "PYTHON", "Java", "Javascript" };
         String[] iconPaths = {
-                "D:\\PBO\\QuizIT_09\\Image\\HTML 1.png",
-                "D:\\PBO\\QuizIT_09\\Image\\css.png",
-                "D:\\PBO\\QuizIT_09\\Image\\C++1.png",
-                "D:\\PBO\\QuizIT_09\\Image\\Python.png",
-                "D:\\PBO\\QuizIT_09\\Image\\java.png",
-                "D:\\PBO\\QuizIT_09\\Image\\javascript (2) 1.png"
+                "Image\\HTML 1.png",
+                "Image\\css.png",
+                "Image\\C++1.png",
+                "Image\\Python.png",
+                "Image\\java.png",
+                "Image\\javascript (2) 1.png"
         };
         Font customFont = null;
         try {
-            customFont = Font.createFont(Font.TRUETYPE_FONT, new File("D:\\PBO\\QuizIT_09\\fonts\\Poppins-Bold.ttf"))
+            customFont = Font.createFont(Font.TRUETYPE_FONT, new File("fonts\\Poppins-Bold.ttf"))
                     .deriveFont(10f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(customFont);
@@ -255,9 +252,8 @@ public class Main {
 
             categoryButton.addActionListener(e -> {
                 SwingUtilities.invokeLater(() -> {
-                    // Membuka jendela Quest
-                    new Quest("Sample Category", mainFrame.getSize()).setVisible(true);
-                    mainFrame.dispose(); // Menutup jendela utama
+                    new Quest(category, mainFrame.getSize()).setVisible(true);
+                    mainFrame.dispose();
                 });
             });
         }
