@@ -13,7 +13,11 @@ public class Quest extends JFrame {
     private JLabel questionLabel;
     private JButton optionA, optionB, optionC, optionD;
     private StepProgressBar progressBar;
-    // private JLabel timerLabel;
+    private Timer timer;
+    private int timeLeft = 900;
+
+    private JLabel timerLabel;
+    private JPanel startPanel;
 
     public Quest(String category, Dimension mainFrameSize) {
         this.category = category;
@@ -24,19 +28,25 @@ public class Quest extends JFrame {
 
     private void initialize(Dimension mainFrameSize) {
         setTitle(category + " Quiz");
-        setSize(mainFrameSize); // Sesuaikan ukuran dengan frame utama
+        setSize(mainFrameSize);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
+
+        // Panel Opening
+        startPanel = new JPanel();
+        startPanel.setBackground(Color.WHITE);
+        startPanel.setLayout(new BoxLayout(startPanel, BoxLayout.Y_AXIS));
 
         // Panel Header
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBackground(Color.WHITE);
         headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
-        JLabel categoryLabel = new JLabel("Category: " + category);
-        categoryLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        JLabel categoryLabel = new JLabel(" " + category);
+        categoryLabel.setFont(new Font("Arial", Font.BOLD, 30));
         categoryLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        categoryLabel.setBorder(BorderFactory.createEmptyBorder(20, 50, 30, 50));
         headerPanel.add(categoryLabel, BorderLayout.NORTH);
 
         progressBar = new StepProgressBar(15);
@@ -107,20 +117,22 @@ public class Quest extends JFrame {
         nextButton.setFocusPainted(false);
 
         // Timer
-        JLabel timerLabel = new JLabel("60", SwingConstants.CENTER);
+        timerLabel = new JLabel(formatTime(timeLeft), SwingConstants.CENTER);
         timerLabel.setFont(new Font("Arial", Font.BOLD, 20));
         timerLabel.setForeground(Color.ORANGE);
 
-        // jalani timer
-        // new Timer(1000, e -> {
-        // int time = Integer.parseInt(timerLabel.getText());
-        // if (time > 0) {
-        // timerLabel.setText(String.valueOf(time - 1));
-        // } else {
-        // ((Timer) e.getSource()).stop();
-        // JOptionPane.showMessageDialog(null, "Time is up!");
-        // }
-        // }).start();
+        // Timer yang berjalan setiap 1 detik
+        timer = new Timer(1000, e -> {
+            if (timeLeft > 0) {
+                timeLeft--;
+                SwingUtilities.invokeLater(() -> timerLabel.setText(formatTime(timeLeft)));
+            } else {
+                ((Timer) e.getSource()).stop();
+                JOptionPane.showMessageDialog(this, "Time is up!");
+                navigateQuest(1);
+            }
+        });
+        timer.start();
 
         // Tambahkan tombol ke panel navigasi
         navigationPanel.add(previousButton, BorderLayout.WEST);
@@ -143,7 +155,7 @@ public class Quest extends JFrame {
                 PreparedStatement statement = connection.prepareStatement(query);
                 statement.setString(1, category);
                 ResultSet resultSet = statement.executeQuery();
-    
+
                 // Menambahkan soal ke dalam list
                 while (resultSet.next()) {
                     String questionText = resultSet.getString("pertanyaan");
@@ -152,11 +164,11 @@ public class Quest extends JFrame {
                     String optionC = resultSet.getString("pilihan_C");
                     String optionD = resultSet.getString("pilihan_D");
                     String correctOption = resultSet.getString("jawaban_benar");
-    
+
                     questions.add(new Question(questionText, optionA, optionB, optionC, optionD, correctOption));
                 }
                 progressBar.updateProgress(0);
-    
+
                 System.out.println("Soal berhasil dimuat untuk kategori: " + category);
             } else {
                 System.err.println("Koneksi ke database gagal.");
@@ -170,7 +182,8 @@ public class Quest extends JFrame {
         if (index >= 0 && index < questions.size()) {
             Question question = questions.get(index);
             // questionLabel.setText(question.getQuestionText());
-            questionLabel.setText("<html><p style='width: 600px; word-wrap: break-word; text-align:center;'>" + question.getQuestionText() + "</p></html>");
+            questionLabel.setText("<html><p style='width: 600px; word-wrap: break-word; text-align:center;'>"
+                    + question.getQuestionText() + "</p></html>");
             optionA.setText("A. " + question.getOptionA());
             optionB.setText("B. " + question.getOptionB());
             optionC.setText("C. " + question.getOptionC());
@@ -201,10 +214,37 @@ public class Quest extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            Quest quest = new Quest("Design Tools", new Dimension(800, 500));
-            quest.setVisible(true);
-        });
+    @Override
+    public void dispose() {
+        if (timer != null) {
+            timer.stop();
+        }
+        super.dispose();
     }
+
+    private void navigateQuest(int direction) {
+        int newIndex = currentQuestionIndex + direction;
+        if (newIndex >= 0 && newIndex < questions.size()) {
+            currentQuestionIndex = newIndex;
+            displayQuestion(currentQuestionIndex);
+            resetTimer(); // Reset timer setiap navigasi
+        }
+    }
+
+    private void resetTimer() {
+        if (timer != null) {
+            timer.stop();
+        }
+        timeLeft = 900;
+        timer.start();
+    }
+
+    // Format waktu dalam jam:menit:detik
+    private String formatTime(int timeInSeconds) {
+        int hours = timeInSeconds / 3600;
+        int minutes = (timeInSeconds % 3600) / 60;
+        int seconds = timeInSeconds % 60;
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
 }
