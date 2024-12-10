@@ -12,6 +12,7 @@ public class Quest extends JFrame {
 
     private JLabel questionLabel;
     private JButton optionA, optionB, optionC, optionD;
+    private boolean isAnswered = false;
     private StepProgressBar progressBar;
     private Timer timer;
     private int timeLeft = 900;
@@ -88,7 +89,12 @@ public class Quest extends JFrame {
 
             button.setText("<html><p style='width: 600px; word-wrap: break-word; text-align:center;'>"
                     + button.getText() + "</p></html>");
-            button.addActionListener(e -> checkAnswer(button.getText().substring(3)));
+            button.addActionListener(e -> {
+                if (!isAnswered) { // Hanya proses jika belum dijawab
+                    checkAnswer(button.getActionCommand()); // Action command digunakan untuk jawaban
+                    disableButtons(); // Nonaktifkan semua tombol jawaban
+                }
+            });
         }
 
         answerPanel.add(optionA);
@@ -181,7 +187,6 @@ public class Quest extends JFrame {
     private void displayQuestion(int index) {
         if (index >= 0 && index < questions.size()) {
             Question question = questions.get(index);
-            // questionLabel.setText(question.getQuestionText());
             questionLabel.setText("<html><p style='width: 600px; word-wrap: break-word; text-align:center;'>"
                     + question.getQuestionText() + "</p></html>");
             optionA.setText("A. " + question.getOptionA());
@@ -189,7 +194,25 @@ public class Quest extends JFrame {
             optionC.setText("C. " + question.getOptionC());
             optionD.setText("D. " + question.getOptionD());
             progressBar.updateProgress(index + 1);
+
+            // Reset status jawaban dan aktifkan tombol
+            isAnswered = false; // Set ulang status ke false
+            enableButtons(); // Aktifkan tombol kembali
         }
+    }
+
+    private void disableButtons() {
+        optionA.setEnabled(false);
+        optionB.setEnabled(false);
+        optionC.setEnabled(false);
+        optionD.setEnabled(false);
+    }
+
+    private void enableButtons() {
+        optionA.setEnabled(true);
+        optionB.setEnabled(true);
+        optionC.setEnabled(true);
+        optionD.setEnabled(true);
     }
 
     private void navigateQuestion(int direction) {
@@ -212,6 +235,7 @@ public class Quest extends JFrame {
             wrong.start();
             JOptionPane.showMessageDialog(this, "Wrong!");
         }
+        isAnswered = true; // Tandai bahwa soal sudah dijawab
     }
 
     @Override
