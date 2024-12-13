@@ -1,42 +1,83 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class StepProgressBar extends JPanel {
-    private List<JLabel> stepLabels = new ArrayList<>();
+    private int stepCount;
+    private List<JLabel> stepLabels;
+    private List<Color> stepColors;
+    private StepClickListener clickListener;
 
-    public StepProgressBar(int totalSteps) {
-        setLayout(new GridLayout(1, totalSteps, 5, 0)); // Layout horizontal dengan jarak antar langkah
-        setBackground(Color.WHITE);
+    public StepProgressBar(int stepCount) {
+        this.stepCount = stepCount;
+        this.stepLabels = new ArrayList<>();
+        this.stepColors = new ArrayList<>();
+        setLayout(new GridLayout(1, stepCount, 5, 0));
 
-        for (int i = 1; i <= totalSteps; i++) {
-            JLabel stepLabel = new JLabel(String.valueOf(i));
-            stepLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        for (int i = 0; i < stepCount; i++) {
+            JLabel stepLabel = new JLabel(String.valueOf(i + 1), SwingConstants.CENTER);
             stepLabel.setOpaque(true);
-            stepLabel.setBackground(Color.LIGHT_GRAY); // Warna default
+            stepLabel.setBackground(Color.LIGHT_GRAY);
             stepLabel.setForeground(Color.DARK_GRAY);
+            stepLabel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+            stepLabel.setFont(new Font("Arial", Font.BOLD, 14));
             stepLabel.setHorizontalAlignment(SwingConstants.CENTER);
             stepLabel.setPreferredSize(new Dimension(30, 30)); // Ukuran persegi
-            stepLabel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
-
-            // Simpan referensi langkah
+            stepLabel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (clickListener != null) {
+                        clickListener.onStepClicked(Integer.parseInt(stepLabel.getText()) - 1);
+                    }
+                }
+            });
             stepLabels.add(stepLabel);
+            stepColors.add(Color.LIGHT_GRAY);
             add(stepLabel);
         }
     }
 
-    public void updateProgress(int currentStep) {
-        // Reset warna langkah sebelumnya
+    public void updateProgress(int step) {
         for (int i = 0; i < stepLabels.size(); i++) {
-            if (i < currentStep) {
-                stepLabels.get(i).setBackground(new Color(255, 247, 212)); 
-                stepLabels.get(i).setForeground(Color.BLACK);
+            stepLabels.get(i).setBackground(i < step ? Color.ORANGE : Color.LIGHT_GRAY);
+        }
+    }
+
+    public void updateStepColor(int stepIndex, Color color) {
+        if (stepIndex >= 0 && stepIndex < stepLabels.size()) {
+            stepLabels.get(stepIndex).setBackground(color);
+            stepColors.set(stepIndex, color);
+        }
+    }
+
+    public void highlightCurrentStep(int currentStep) {
+        for (int i = 0; i < stepLabels.size(); i++) {
+            if (i == currentStep) {
+                stepLabels.get(i).setBackground(new Color(255, 204, 0)); // Kuning kunyit
+            } else if (stepColors.get(i) == Color.LIGHT_GRAY) {
+                stepLabels.get(i).setBackground(Color.LIGHT_GRAY); // Tetap abu-abu jika belum dijawab
             } else {
-                stepLabels.get(i).setBackground(Color.LIGHT_GRAY); // Warna default
-                stepLabels.get(i).setForeground(Color.DARK_GRAY);
+                stepLabels.get(i).setBackground(stepColors.get(i)); // Warna sesuai status jawaban
             }
         }
     }
 
+    public void resetSteps() {
+        for (int i = 0; i < stepLabels.size(); i++) {
+            stepLabels.get(i).setBackground(Color.LIGHT_GRAY);
+            stepColors.set(i, Color.LIGHT_GRAY);
+        }
+    }
+
+    public void setStepClickListener(StepClickListener listener) {
+        this.clickListener = listener;
+    }
+
+    public interface StepClickListener {
+        void onStepClicked(int stepIndex);
+    }
 }

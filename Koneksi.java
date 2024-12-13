@@ -75,9 +75,8 @@ public class Koneksi {
 
             // Periksa apakah foreign key sudah ada
             ResultSet rs = statement.executeQuery(
-                "SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE " +
-                "WHERE TABLE_NAME = 'pemain' AND TABLE_SCHEMA = 'pbo_quizit' AND CONSTRAINT_NAME = 'FK_pemain_user';"
-            );
+                    "SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE " +
+                            "WHERE TABLE_NAME = 'pemain' AND TABLE_SCHEMA = 'pbo_quizit' AND CONSTRAINT_NAME = 'FK_pemain_user';");
             if (!rs.next()) {
                 statement.execute(addForeignKey);
                 System.out.println("Menambahkan Foreign Key    : Berhasil");
