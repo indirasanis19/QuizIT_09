@@ -63,7 +63,7 @@ public class Main {
         pwField.setMaximumSize(new Dimension(300, 40));
         pwField.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel regis = new JLabel("Don't have account? register here :", SwingConstants.CENTER);
+        JLabel regis = new JLabel("Don't have an account? register here :", SwingConstants.CENTER);
         regis.setFont(new Font("Arial", Font.PLAIN, 18));
         regis.setForeground(Color.GRAY);
         regis.setAlignmentX(Component.CENTER_ALIGNMENT);

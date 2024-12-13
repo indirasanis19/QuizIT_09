@@ -314,33 +314,33 @@ public class Data {
                                 "<b>", "<t>", "<b>", "HTML");
                 data.addData("soal", "Tag HTML mana yang digunakan untuk baris baru?", "<br>", "<lb>", "<line>",
                                 "<break>", "<br>", "HTML");
-                data.addData("soal", "Apa tujuan dari tag `<title>` dalam HTML?",
+                data.addData("soal", "Apa tujuan dari tag &lt;title&gt; dalam HTML?",
                                 "Untuk memberikan nama halaman yang muncul di tab browser",
                                 "Untuk menambahkan teks di dalam dokumen", "Untuk membuat paragraf",
                                 "Untuk membuat header pada halaman",
                                 "Untuk memberikan nama halaman yang muncul di tab browser", "HTML");
                 data.addData("soal", "Tag HTML mana yang digunakan untuk membuat daftar tanpa nomor?", "<ol>", "<ul>",
                                 "<list>", "<li>", "<ul>", "HTML");
-                data.addData("soal", "Apa tujuan dari tag `<p>` dalam HTML?", "Untuk membuat tautan",
+                data.addData("soal", "Apa tujuan dari tag &lt;p&gt; dalam HTML?", "Untuk membuat tautan",
                                 "Untuk membuat paragraf", "Untuk membuat baris baru", "Untuk menampilkan gambar",
                                 "Untuk membuat paragraf", "HTML");
                 data.addData("soal", "Tag HTML mana yang digunakan untuk menyisipkan gambar?", "<img>", "<image>",
                                 "<picture>", "<graphics>", "<img>", "HTML");
-                data.addData("soal", "Atribut apa yang digunakan untuk menentukan URL gambar pada tag `<img>`?", "src",
+                data.addData("soal", "Atribut apa yang digunakan untuk menentukan URL gambar pada tag &lt;img&gt;?", "src",
                                 "alt", "href", "link", "src", "HTML");
-                data.addData("soal", "Apa tujuan dari atribut `href` pada tag `<a>`?", "Menentukan alamat hyperlink",
+                data.addData("soal", "Apa tujuan dari atribut `href` pada tag &lt;a&gt;?", "Menentukan alamat hyperlink",
                                 "Menentukan warna teks", "Menentukan posisi tautan", "Menambahkan teks alternatif",
                                 "Menentukan alamat hyperlink", "HTML");
                 data.addData("soal", "Tag HTML mana yang digunakan untuk membuat header atau judul?",
                                 "<h1> hingga <h6>", "<header>", "<head>", "<title>", "<h1> hingga <h6>", "HTML");
-                data.addData("soal", "Apa perbedaan antara tag `<ol>` dan `<ul>`?", "Tidak ada perbedaan",
+                data.addData("soal", "Apa perbedaan antara tag &lt;ol&gt; dan &lt;ul&gt;?", "Tidak ada perbedaan",
                                 "`<ol>` untuk daftar bernomor, `<ul>` untuk daftar tanpa nomor",
                                 "`<ol>` untuk daftar tanpa nomor, `<ul>` untuk daftar bernomor",
                                 "`<ul>` hanya digunakan untuk daftar dalam tabel",
                                 "`<ol>` untuk daftar bernomor, `<ul>` untuk daftar tanpa nomor", "HTML");
                 data.addData("soal", "Tag HTML mana yang digunakan untuk memasukkan baris horizontal di halaman?",
                                 "<hr>", "<br>", "<line>", "<border>", "<hr>", "HTML");
-                data.addData("soal", "Apa fungsi dari atribut `lang` dalam tag `<html>`?",
+                data.addData("soal", "Apa fungsi dari atribut `lang` dalam tag &lt;html&gt;?",
                                 "Menentukan gaya bahasa teks", "Menentukan bahasa dokumen HTML",
                                 "Mengatur format paragraf", "Menghubungkan file CSS", "Menentukan bahasa dokumen HTML",
                                 "HTML");

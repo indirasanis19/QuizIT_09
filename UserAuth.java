@@ -1,7 +1,5 @@
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
 import java.sql.*;
+import javax.swing.*;
 
 public class UserAuth {
 
@@ -33,7 +31,7 @@ public class UserAuth {
             insertUserStmt.setString(1, username);
             insertUserStmt.setString(2, password);
             insertUserStmt.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Registration successfull!", "Success", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Registration successfull!", "Success", JOptionPane.INFORMATION_MESSAGE);
 
             String insertPlayerQuery = "INSERT INTO pemain (nama, skor_terakhir, skor_tertinggi) VALUES (?, 0, 0)";
             PreparedStatement insertPlayerStmt = conn.prepareStatement(insertPlayerQuery);

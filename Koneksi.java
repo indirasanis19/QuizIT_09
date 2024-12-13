@@ -79,7 +79,7 @@ public class Koneksi {
                             "WHERE TABLE_NAME = 'pemain' AND TABLE_SCHEMA = 'pbo_quizit' AND CONSTRAINT_NAME = 'FK_pemain_user';");
             if (!rs.next()) {
                 statement.execute(addForeignKey);
-                System.out.println("Menambahkan Foreign Key    : Berhasil");
+                System.out.println("Menambahkan Foreign Key   : Berhasil");
             } else {
                 System.out.println("Foreign Key sudah ada");
             }
