@@ -9,6 +9,7 @@ public class Quest extends JFrame {
     private int currentQuestionIndex = 0;
     // private JProgressBar progressBar;
     private List<Question> questions = new ArrayList<>();
+    private boolean[] questionAnswered;
 
     private JLabel questionLabel;
     private JButton optionA, optionB, optionC, optionD;
@@ -51,6 +52,11 @@ public class Quest extends JFrame {
         headerPanel.add(categoryLabel, BorderLayout.NORTH);
 
         progressBar = new StepProgressBar(15);
+        progressBar = new StepProgressBar(15);
+        progressBar.setStepClickListener(stepIndex -> {
+            currentQuestionIndex = stepIndex;
+            displayQuestion(stepIndex);
+        });
         headerPanel.add(progressBar, BorderLayout.SOUTH);
 
         // Panel Pertanyaan
@@ -91,7 +97,7 @@ public class Quest extends JFrame {
                     + button.getText() + "</p></html>");
             button.addActionListener(e -> {
                 if (!isAnswered) { // Hanya proses jika belum dijawab
-                    checkAnswer(button.getActionCommand()); // Action command digunakan untuk jawaban
+                    checkAnswer(button.getText().substring(3)); // Action command digunakan untuk jawaban
                     disableButtons(); // Nonaktifkan semua tombol jawaban
                 }
             });
@@ -173,6 +179,10 @@ public class Quest extends JFrame {
 
                     questions.add(new Question(questionText, optionA, optionB, optionC, optionD, correctOption));
                 }
+                questionAnswered = new boolean[questions.size()];
+                for (int i = 0; i < questionAnswered.length; i++) {
+                    questionAnswered[i] = false; // Semua soal awalnya belum dijawab
+                }
                 progressBar.updateProgress(0);
 
                 System.out.println("Soal berhasil dimuat untuk kategori: " + category);
@@ -193,11 +203,18 @@ public class Quest extends JFrame {
             optionB.setText("B. " + question.getOptionB());
             optionC.setText("C. " + question.getOptionC());
             optionD.setText("D. " + question.getOptionD());
-            progressBar.updateProgress(index + 1);
+            // progressBar.updateProgress(index + 1);
 
-            // Reset status jawaban dan aktifkan tombol
-            isAnswered = false; // Set ulang status ke false
-            enableButtons(); // Aktifkan tombol kembali
+            progressBar.highlightCurrentStep(index);
+
+            if (questionAnswered[index]) {
+                disableButtons();
+            } else {
+                enableButtons();
+            }
+    
+            // Reset status jawaban 
+            isAnswered = false; 
         }
     }
 
@@ -230,12 +247,17 @@ public class Quest extends JFrame {
             Music correct = new Music("music//correct.wav", false);
             correct.start();
             JOptionPane.showMessageDialog(this, "Correct!");
+            progressBar.updateStepColor(currentQuestionIndex, Color.GREEN);
         } else {
             Music wrong = new Music("music//wrong.wav", false);
             wrong.start();
             JOptionPane.showMessageDialog(this, "Wrong!");
+            progressBar.updateStepColor(currentQuestionIndex, Color.RED);
         }
+
+        questionAnswered[currentQuestionIndex] = true;
         isAnswered = true; // Tandai bahwa soal sudah dijawab
+        disableButtons(); // Nonaktifkan tombol jawaban
     }
 
     @Override

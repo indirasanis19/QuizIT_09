@@ -39,7 +39,7 @@ public class Main {
         welcomeLabel.setForeground(Color.GRAY);
         welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel enterNameLabel = new JLabel("Enter Name :", SwingConstants.CENTER);
+        JLabel enterNameLabel = new JLabel("Enter Name / Username:", SwingConstants.CENTER);
         enterNameLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         enterNameLabel.setForeground(Color.GRAY);
         enterNameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -51,23 +51,63 @@ public class Main {
         nameField.setMaximumSize(new Dimension(300, 40));
         nameField.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JButton startButton = new JButton("Start");
+        JLabel enterPassword = new JLabel("Enter Password :", SwingConstants.CENTER);
+        enterPassword.setFont(new Font("Arial", Font.PLAIN, 18));
+        enterPassword.setForeground(Color.GRAY);
+        enterPassword.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JPasswordField pwField = new JPasswordField("");
+        pwField.setFont(new Font("Arial", Font.PLAIN, 16));
+        pwField.setForeground(Color.GRAY);
+        pwField.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 2));
+        pwField.setMaximumSize(new Dimension(300, 40));
+        pwField.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel regis = new JLabel("Don't have account? register here :", SwingConstants.CENTER);
+        regis.setFont(new Font("Arial", Font.PLAIN, 18));
+        regis.setForeground(Color.GRAY);
+        regis.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JButton startButton = new JButton("Log in");
         startButton.setFont(new Font("Arial", Font.BOLD, 18));
         startButton.setForeground(Color.WHITE);
         startButton.setBackground(new Color(46, 7, 63));
         startButton.setFocusPainted(false);
         startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        JButton regBtn = new JButton("Register");
+        regBtn.setFont(new Font("Arial", Font.BOLD, 18));
+        regBtn.setForeground(Color.WHITE);
+        regBtn.setBackground(new Color(46, 7, 63));
+        regBtn.setFocusPainted(false);
+        regBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         // Event saat tombol Start diklik
         startButton.addActionListener(e -> {
             String username = nameField.getText().trim();
-            if (!username.isEmpty()) {
-                showMainScreen(username);
-                welcomeFrame.dispose();
-            } else {
-                JOptionPane.showMessageDialog(welcomeFrame, "Please enter your name.", "Error",
+            char[] passwordChars = pwField.getPassword();
+            String password = new String(passwordChars);
+
+            if (username.isEmpty() || password.isEmpty()) {
+                JOptionPane.showMessageDialog(welcomeFrame,
+                        "Username/password cannot be empty",
+                        "Error",
                         JOptionPane.ERROR_MESSAGE);
+            } else {
+                if (UserAuth.login(username, password)) { // Periksa hasil login
+                    showMainScreen(username);
+                    welcomeFrame.dispose();
+                } else {
+                    //
+                }
             }
+        });
+
+        regBtn.addActionListener(e -> {
+            welcomeFrame.getContentPane().removeAll(); // Menghapus semua komponen yang ada
+            showReg(); // Menampilkan layar registrasi
+            welcomeFrame.revalidate();
+            welcomeFrame.repaint();
         });
 
         leftPanel.add(Box.createRigidArea(new Dimension(0, 200)));
@@ -79,7 +119,15 @@ public class Main {
         leftPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         leftPanel.add(nameField);
         leftPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        leftPanel.add(enterPassword);
+        leftPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        leftPanel.add(pwField);
+        leftPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         leftPanel.add(startButton);
+        leftPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        leftPanel.add(regis);
+        leftPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        leftPanel.add(regBtn);
 
         // Panel kanan (gambar maskot)
         JPanel rightPanel = new JPanel();
@@ -92,6 +140,124 @@ public class Main {
         welcomeFrame.add(rightPanel);
         welcomeFrame.setVisible(true);
     }
+
+    public void showReg() {
+        welcomeFrame.getContentPane().removeAll(); // Membersihkan frame untuk konten registrasi
+        JPanel regPanel = new JPanel();
+        regPanel.setLayout(new BoxLayout(regPanel, BoxLayout.Y_AXIS));
+        regPanel.setBackground(Color.WHITE);
+        regPanel.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
+    
+        JLabel regLabel = new JLabel("Register", SwingConstants.CENTER);
+        regLabel.setFont(new Font("Arial", Font.BOLD, 36));
+        regLabel.setForeground(Color.ORANGE);
+        regLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    
+        JLabel enterNameLabel = new JLabel("Enter Name / Username:", SwingConstants.CENTER);
+        enterNameLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        enterNameLabel.setForeground(Color.GRAY);
+        enterNameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    
+        JTextField nameField = new JTextField("");
+        nameField.setFont(new Font("Arial", Font.PLAIN, 16));
+        nameField.setForeground(Color.GRAY);
+        nameField.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 2));
+        nameField.setMaximumSize(new Dimension(300, 40));
+        nameField.setAlignmentX(Component.CENTER_ALIGNMENT);
+    
+        JLabel enterPassword = new JLabel("Enter Password :", SwingConstants.CENTER);
+        enterPassword.setFont(new Font("Arial", Font.PLAIN, 18));
+        enterPassword.setForeground(Color.GRAY);
+        enterPassword.setAlignmentX(Component.CENTER_ALIGNMENT);
+    
+        JPasswordField pwField = new JPasswordField();
+        pwField.setFont(new Font("Arial", Font.PLAIN, 16));
+        pwField.setForeground(Color.GRAY);
+        pwField.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 2));
+        pwField.setMaximumSize(new Dimension(300, 40));
+        pwField.setAlignmentX(Component.CENTER_ALIGNMENT);
+    
+        JLabel confirmPasswordLabel = new JLabel("Confirm Password :", SwingConstants.CENTER);
+        confirmPasswordLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        confirmPasswordLabel.setForeground(Color.GRAY);
+        confirmPasswordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    
+        JPasswordField confirmPwField = new JPasswordField();
+        confirmPwField.setFont(new Font("Arial", Font.PLAIN, 16));
+        confirmPwField.setForeground(Color.GRAY);
+        confirmPwField.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 2));
+        confirmPwField.setMaximumSize(new Dimension(300, 40));
+        confirmPwField.setAlignmentX(Component.CENTER_ALIGNMENT);
+    
+        JButton registerButton = new JButton("Register");
+        registerButton.setFont(new Font("Arial", Font.BOLD, 18));
+        registerButton.setForeground(Color.WHITE);
+        registerButton.setBackground(new Color(46, 7, 63));
+        registerButton.setFocusPainted(false);
+        registerButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+    
+        JButton backButton = new JButton("Back to Login");
+        backButton.setFont(new Font("Arial", Font.BOLD, 18));
+        backButton.setForeground(Color.WHITE);
+        backButton.setBackground(new Color(50, 27, 103));
+        backButton.setFocusPainted(false);
+        backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Event untuk tombol regist
+        registerButton.addActionListener(e -> {
+            String username = nameField.getText().trim();
+            char[] passwordChars = pwField.getPassword();
+            char[] confirmPasswordChars = confirmPwField.getPassword();
+        
+            String password = new String(passwordChars); // Mengonversi ke String
+            String confirmPassword = new String(confirmPasswordChars);
+        
+            if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+                JOptionPane.showMessageDialog(welcomeFrame,
+                        "Username/password cannot be empty",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            } else {
+                UserAuth.register(username, password, confirmPassword); // Panggil metode register sesuai implementasi Anda
+            }
+        
+            // Membersihkan data password untuk keamanan
+            java.util.Arrays.fill(passwordChars, ' ');
+            java.util.Arrays.fill(confirmPasswordChars, ' ');
+        });
+        
+    
+        // Event untuk tombol back
+        backButton.addActionListener(e -> {
+            welcomeFrame.getContentPane().removeAll(); // Menghapus semua komponen yang ada
+            showWelcomeScreen(); // Kembali ke layar login
+            welcomeFrame.revalidate();
+            welcomeFrame.repaint();
+        });
+    
+        regPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        regPanel.add(regLabel);
+        regPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        regPanel.add(enterNameLabel);
+        regPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        regPanel.add(nameField);
+        regPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        regPanel.add(enterPassword);
+        regPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        regPanel.add(pwField);
+        regPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        regPanel.add(confirmPasswordLabel);
+        regPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        regPanel.add(confirmPwField);
+        regPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        regPanel.add(registerButton);
+        regPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        regPanel.add(backButton);
+    
+        welcomeFrame.add(regPanel); // Menambahkan panel ke frame
+        welcomeFrame.revalidate();
+        welcomeFrame.repaint();
+    }    
 
     public void showMainScreen(String username) {
         // Frame untuk layar utama

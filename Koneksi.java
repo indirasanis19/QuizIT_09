@@ -1,5 +1,6 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -7,6 +8,7 @@ public class Koneksi {
     private static final String URL = "jdbc:mysql://localhost:3306/";
     private static final String USER = "root";
     private static final String PASSWORD = "";
+
     public static Connection getConnection() {
         try {
             Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -19,6 +21,7 @@ public class Koneksi {
             return null;
         }
     }
+
     private static void createDatabaseAndTable(Connection connection) {
         String createDatabase = "CREATE DATABASE IF NOT EXISTS pbo_quizit";
         String createTableSoal = """
@@ -54,5 +57,35 @@ public class Koneksi {
         } catch (SQLException e) {
             System.err.println("Membuat Database/Tabel    : Gagal/Sudah ada (" + e.getMessage() + ")");
         }
+
+        String createTableUsers = """
+                CREATE TABLE IF NOT EXISTS users (
+                    username VARCHAR(100) PRIMARY KEY,
+                    password VARCHAR(255) NOT NULL
+                );
+                """;
+        String addForeignKey = """
+                ALTER TABLE pemain
+                ADD CONSTRAINT FK_pemain_user
+                FOREIGN KEY (nama) REFERENCES users(username)
+                ON DELETE CASCADE ON UPDATE CASCADE;
+                """;
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(createTableUsers);
+
+            // Periksa apakah foreign key sudah ada
+            ResultSet rs = statement.executeQuery(
+                    "SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE " +
+                            "WHERE TABLE_NAME = 'pemain' AND TABLE_SCHEMA = 'pbo_quizit' AND CONSTRAINT_NAME = 'FK_pemain_user';");
+            if (!rs.next()) {
+                statement.execute(addForeignKey);
+                System.out.println("Menambahkan Foreign Key    : Berhasil");
+            } else {
+                System.out.println("Foreign Key sudah ada");
+            }
+        } catch (SQLException e) {
+            System.err.println("Membuat Database/Tabel    : Gagal (" + e.getMessage() + ")");
+        }
+
     }
 }
