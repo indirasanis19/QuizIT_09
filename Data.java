@@ -392,7 +392,7 @@ public class Data {
                                 "Menghapus elemen dari dokumen",
                                 "Mengatur elemen relatif terhadap elemen terdekat dengan posisi tertentu", "CSS");
                 data.addData("soal",
-                                "Bagaimana cara memilih semua elemen `<p>` di dalam elemen dengan class `container`?",
+                                "Bagaimana cara memilih semua elemen &lt;p&gt; di dalam elemen dengan class `container`?",
                                 ".container p", "p.container", ".container > p", "container p", ".container p", "CSS");
                 data.addData("soal", "Apa perbedaan antara `padding` dan `margin` dalam CSS?",
                                 "Padding adalah jarak luar elemen, margin adalah jarak dalam elemen",
