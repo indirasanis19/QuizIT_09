@@ -320,7 +320,6 @@ public class Quest extends JFrame {
 
         panel.add(scorePanel, BorderLayout.CENTER);
 
-        // Panel untuk tombol di bagian tengah bawah
         JPanel buttonPanel = new JPanel();
         buttonPanel.setOpaque(false);
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -342,8 +341,7 @@ public class Quest extends JFrame {
         });
 
         buttonPanel.add(completeButton);
-        panel.add(buttonPanel, BorderLayout.SOUTH); // Tambahkan tombol di bagian bawah
-
+        panel.add(buttonPanel, BorderLayout.SOUTH);
         dialog.add(panel, BorderLayout.CENTER);
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
