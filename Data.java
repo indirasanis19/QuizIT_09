@@ -399,28 +399,6 @@ public class Data {
                                 "Memilih elemen saat pointer berada di atas elemen",
                                 "Memilih elemen yang memiliki fokus", "Memilih elemen pertama dari jenisnya",
                                 "Memilih elemen saat pointer berada di atas elemen", "CSS");
-                addData("soal", "Apa fungsi dari properti `flex-direction` dalam CSS Flexbox?",
-                                "Mengatur orientasi elemen flex (baris atau kolom)", "Mengatur ukuran elemen flex",
-                                "Mengatur jarak antar elemen flex", "Mengatur posisi elemen flex",
-                                "Mengatur orientasi elemen flex (baris atau kolom)", "CSS");
-                addData("soal", "Bagaimana cara menyisipkan file CSS eksternal ke dalam dokumen HTML?",
-                                "<link rel=\"stylesheet\" href=\"style.css\">",
-                                "<css rel=\"stylesheet\" href=\"style.css\">", "<style src=\"style.css\">",
-                                "<script href=\"style.css\">", "<link rel=\"stylesheet\" href=\"style.css\">", "CSS");
-                addData("soal", "Apa tujuan dari properti `overflow` dalam CSS?",
-                                "Mengontrol apa yang terjadi saat konten elemen melebihi batas elemen",
-                                "Mengatur jarak antara elemen", "Mengubah posisi elemen", "Mengatur ukuran elemen",
-                                "Mengontrol apa yang terjadi saat konten elemen melebihi batas elemen", "CSS");
-                addData("soal", "Apa arti dari nilai `inherit` pada properti CSS?",
-                                "Mengatur properti ke nilai default elemen",
-                                "Mewarisi nilai properti dari elemen induknya", "Menghapus nilai properti elemen",
-                                "Mengatur properti menjadi tidak aktif", "Mewarisi nilai properti dari elemen induknya",
-                                "CSS");
-                addData("soal", "Apa yang dimaksud dengan media query dalam CSS?",
-                                "Sintaks untuk membuat elemen responsif terhadap perangkat",
-                                "Cara untuk memilih elemen spesifik berdasarkan class",
-                                "Teknik untuk mengatur warna elemen", "Kode untuk menjalankan animasi",
-                                "Sintaks untuk membuat elemen responsif terhadap perangkat", "CSS");
 
                 System.out.println("Semua soal berhasil ditambahkan!");
         }

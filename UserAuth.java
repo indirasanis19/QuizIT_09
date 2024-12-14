@@ -73,8 +73,6 @@ public class UserAuth {
     public static Object[] getPlayerProfile(String username) {
         try (Connection conn = connectToDB()) {
             if (conn == null) return null;
-    
-            // Query untuk mengambil data dari tabel pemain
             String query = """
                     SELECT p.nama, p.skor_terakhir, p.skor_tertinggi
                     FROM pemain p
@@ -85,18 +83,15 @@ public class UserAuth {
             ResultSet rs = stmt.executeQuery();
     
             if (rs.next()) {
-                // Ambil data dari hasil query
                 String name = rs.getString("nama");
                 int lastScore = rs.getInt("skor_terakhir");
                 int highScore = rs.getInt("skor_tertinggi");
-    
-                // Kembalikan data sebagai array
                 return new Object[]{name, lastScore, highScore};
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null; // Kembalikan null jika terjadi kesalahan
+        return null;
     }    
 
     public static void updatePlayerStats(String username, int skorTerakhir, int soalTerjawab, int soalBenar) {

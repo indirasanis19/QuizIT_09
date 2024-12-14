@@ -1,18 +1,19 @@
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
 
 public class Main {
     private static JButton activeButton = null;
     private JFrame welcomeFrame;
     private JFrame mainFrame;
-    private boolean isInMainScreen = true; // Menyimpan status tampilan saat ini
+    private boolean isInMainScreen = true;
     private static String currentUser;
     private int id;
-    private Music bgm;
-    private ArrayList<PlayerScore> leaderboardData = new ArrayList<>(); // Menyimpan data leaderboard
+    private ArrayList<PlayerScore> leaderboardData = new ArrayList<>();
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -23,20 +24,17 @@ public class Main {
     }
 
     public void showWelcomeScreen() {
-        // Frame untuk layar Welcome
         welcomeFrame = new JFrame("QuizIT");
         welcomeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         welcomeFrame.setSize(800, 500);
         welcomeFrame.setLayout(new GridLayout(1, 2));
         welcomeFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-        // Panel kiri
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
         leftPanel.setBackground(Color.WHITE);
         leftPanel.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
 
-        // Menambahkan komponen dengan CENTER_ALIGNMENT
         JLabel logoLabel = new JLabel("QuizIT", SwingConstants.CENTER);
         logoLabel.setFont(new Font("Arial", Font.BOLD, 36));
         logoLabel.setForeground(Color.ORANGE);
@@ -90,7 +88,6 @@ public class Main {
         regBtn.setFocusPainted(false);
         regBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Event saat tombol Start diklik
         startButton.addActionListener(e -> {
             String username = nameField.getText().trim();
             char[] passwordChars = pwField.getPassword();
@@ -107,14 +104,13 @@ public class Main {
                     showMainScreen(currentUser);
                     welcomeFrame.dispose();
                 } else {
-                    //
                 }
             }
         });
 
         regBtn.addActionListener(e -> {
-            welcomeFrame.getContentPane().removeAll(); // Menghapus semua komponen yang ada
-            showReg(); // Menampilkan layar registrasi
+            welcomeFrame.getContentPane().removeAll();
+            showReg();
             welcomeFrame.revalidate();
             welcomeFrame.repaint();
         });
@@ -138,7 +134,6 @@ public class Main {
         leftPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         leftPanel.add(regBtn);
 
-        // Panel kanan (gambar maskot)
         JPanel rightPanel = new JPanel();
         rightPanel.setBackground(new Color(46, 7, 63));
         JLabel mascotLabel = new JLabel(new ImageIcon("Image\\maskot 1.png"));
@@ -151,7 +146,7 @@ public class Main {
     }
 
     public void showReg() {
-        welcomeFrame.getContentPane().removeAll(); // Membersihkan frame untuk konten registrasi
+        welcomeFrame.getContentPane().removeAll();
         JPanel regPanel = new JPanel();
         regPanel.setLayout(new BoxLayout(regPanel, BoxLayout.Y_AXIS));
         regPanel.setBackground(Color.WHITE);
@@ -212,13 +207,12 @@ public class Main {
         backButton.setFocusPainted(false);
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Event untuk tombol regist
         registerButton.addActionListener(e -> {
             String username = nameField.getText().trim();
             char[] passwordChars = pwField.getPassword();
             char[] confirmPasswordChars = confirmPwField.getPassword();
 
-            String password = new String(passwordChars); // Mengonversi ke String
+            String password = new String(passwordChars);
             String confirmPassword = new String(confirmPasswordChars);
 
             if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
@@ -227,16 +221,11 @@ public class Main {
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
             } else {
-                UserAuth.register(username, password, confirmPassword); // Panggil metode register sesuai implementasi
-                                                                        // Anda
+                UserAuth.register(username, password, confirmPassword);
             }
-
-            // Membersihkan data password untuk keamanan
             java.util.Arrays.fill(passwordChars, ' ');
             java.util.Arrays.fill(confirmPasswordChars, ' ');
         });
-
-        // Event untuk tombol back
         backButton.addActionListener(e -> {
             welcomeFrame.dispose();
             showWelcomeScreen();
@@ -261,21 +250,19 @@ public class Main {
         regPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         regPanel.add(backButton);
 
-        welcomeFrame.add(regPanel); // Menambahkan panel ke frame
+        welcomeFrame.add(regPanel);
         welcomeFrame.revalidate();
         welcomeFrame.repaint();
     }
 
     public void showMainScreen(String username) {
         currentUser = username;
-        // Frame untuk layar utama
         mainFrame = new JFrame("QuizIT");
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setSize(800, 600);
         mainFrame.setLayout(new BorderLayout());
         mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-        // Sidebar
         JPanel sidebarPanel = new JPanel();
         sidebarPanel.setBackground(new Color(46, 7, 63));
         sidebarPanel.setPreferredSize(new Dimension(200, 0));
@@ -290,19 +277,16 @@ public class Main {
         sidebarPanel.add(createSidebarButton("Logout", "Image\\Logout.png"));
         sidebarPanel.add(Box.createRigidArea(new Dimension(0, 30)));
 
-        // Header
         JPanel headerPanel = new JPanel();
         headerPanel.setBackground(new Color(62, 34, 75));
         headerPanel.setPreferredSize(new Dimension(150, 80));
         headerPanel.setLayout(new BorderLayout());
 
-        // Menambahkan titleLabel ke dalam headerPanel
         JLabel titelheader = new JLabel("QuizIT", SwingConstants.CENTER);
         titelheader.setForeground(Color.ORANGE);
         titelheader.setFont(new Font("Arial", Font.BOLD, 34));
         titelheader.setBorder(BorderFactory.createEmptyBorder(10, 50, 0, 10));
 
-        // Menambahkan titleLabel ke headerPanel
         headerPanel.add(titelheader, BorderLayout.WEST);
 
         JPanel userInfoPanel = new JPanel();
@@ -334,24 +318,20 @@ public class Main {
         userInfoPanel.add(userPointsLabel);
         headerPanel.add(userInfoPanel, BorderLayout.EAST);
 
-        // Konten utama
         JPanel contentPanel = new JPanel();
         contentPanel.setBackground(Color.WHITE);
         contentPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         contentPanel.setLayout(new GridLayout(1, 1));
 
-        // Panel kiri untuk search bar
         JPanel searchPanel = new JPanel(new BorderLayout());
         searchPanel.setPreferredSize(new Dimension(550, 30));
         searchPanel.setBackground(Color.WHITE);
         searchPanel.setBorder(new CustomRoundedBorder(10, Color.GRAY));
 
-        // JTextField (search field)
         JTextField searchField = new JTextField();
         searchField.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 35));
         searchField.setPreferredSize(new Dimension(500, 30));
 
-        // Ikon search
         ImageIcon searchIcon = new ImageIcon("Image\\search-outline.png");
         JLabel searchIconLabel = new JLabel(searchIcon);
         searchIconLabel.setPreferredSize(new Dimension(30, 30));
@@ -359,22 +339,18 @@ public class Main {
         searchIconLabel.setBackground(Color.WHITE);
         searchIconLabel.setOpaque(true);
 
-        // Tambahkan JTextField ke kiri dan ikon ke kanan
         searchPanel.add(searchField, BorderLayout.CENTER);
         searchPanel.add(searchIconLabel, BorderLayout.EAST);
 
-        // Menambahkan searchPanel ke panel kiri
         JPanel leftContentPanel = new JPanel(new BorderLayout());
         leftContentPanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 15, 15));
         leftContentPanel.setBackground(Color.WHITE);
         leftContentPanel.add(searchPanel, BorderLayout.NORTH);
 
-        // Category Panel
         JPanel categoriesPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         categoriesPanel.setBackground(Color.WHITE);
         categoriesPanel.setBorder(BorderFactory.createEmptyBorder(20, 5, 15, 5));
 
-        // Daftar kategori dan ikon
         String[] categories = { "HTML", "CSS", "C++", "PYTHON", "Java", "Javascript" };
         String[] iconPaths = {
                 "Image\\HTML 1.png",
@@ -394,17 +370,14 @@ public class Main {
             e.printStackTrace();
         }
 
-        // Set layout untuk categoriesPanel
         categoriesPanel.setLayout(new BoxLayout(categoriesPanel, BoxLayout.Y_AXIS));
 
-        // Membuat panel untuk tombol kategori
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         buttonPanel.setBackground(Color.WHITE);
 
-        // Membuat tombol untuk setiap kategori
         for (int i = 0; i < categories.length; i++) {
-            final String category = categories[i]; // Create a final variable
+            final String category = categories[i];
             JButton categoryButton = new JButton(category);
             categoryButton.setIcon(new ImageIcon(iconPaths[i]));
             categoryButton.setPreferredSize(new Dimension(90, 60));
@@ -412,12 +385,10 @@ public class Main {
             categoryButton.setHorizontalTextPosition(SwingConstants.CENTER);
             categoryButton.setVerticalTextPosition(SwingConstants.BOTTOM);
 
-            // Mengatur ukuran font
             categoryButton.setFont(customFont);
             categoryButton.setMargin(new Insets(10, 50, 10, 10));
             categoryButton.setBorder(new CustomRoundedBorder(10, Color.GRAY));
 
-            // Mengatur ukuran font
             categoryButton.setFont(customFont);
             categoryButton.setMargin(new Insets(10, 50, 10, 10));
             categoryButton.setBorder(new CustomRoundedBorder(10, Color.GRAY));
@@ -426,8 +397,6 @@ public class Main {
 
             categoryButton.addActionListener(e -> {
                 SwingUtilities.invokeLater(() -> {
-                    bgm = new Music("Music//bgm.wav");
-                    bgm.start();
                     new Quest(category, mainFrame.getSize(), username, this).setVisible(true);
                     mainFrame.dispose();
                 });
@@ -436,7 +405,6 @@ public class Main {
 
         categoriesPanel.add(buttonPanel);
 
-        // Membuat panel untuk label "Recent Activity"
         JPanel labelPanel = new JPanel();
         labelPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         labelPanel.setBackground(Color.WHITE);
@@ -446,7 +414,6 @@ public class Main {
         labelPanel.add(recentActivityLabel);
         categoriesPanel.add(labelPanel);
 
-        // Panel untuk question count and score
         for (int i = 0; i < categories.length; i++) {
             JPanel scorePanel = new JPanel();
             scorePanel.setLayout(new BoxLayout(scorePanel, BoxLayout.Y_AXIS));
@@ -498,13 +465,11 @@ public class Main {
 
         leftContentPanel.add(categoriesPanel);
 
-        // Panel kanan untuk card
         JPanel rightContentPanel = new JPanel();
         rightContentPanel.setBackground(Color.WHITE);
         rightContentPanel.setLayout(new BorderLayout());
         rightContentPanel.setBorder(BorderFactory.createEmptyBorder(5, 20, 30, 20));
 
-        // Tabel leaderboard (rank, player, score)
         String[] columnNames = { "Rank", "Player", "Score" };
         Object[][] data = getLeaderboardData();
 
@@ -514,25 +479,9 @@ public class Main {
         leaderboardTable.setForeground(Color.BLACK);
         leaderboardTable.setRowHeight(30);
 
-        // Menambahkan JScrollPane untuk tabel
         JScrollPane scrollPane = new JScrollPane(leaderboardTable);
         rightContentPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // // Mengambil gambar dan mengubah ukurannya
-        // ImageIcon originalIcon = new
-        // ImageIcon("D:\\PBO\\QuizIT_09\\Image\\maskot2.png");
-        // Image image = originalIcon.getImage().getScaledInstance(150, 150,
-        // Image.SCALE_SMOOTH); // Mengatur ukuran ke
-        // // 150x150 (ubah sesuai
-        // // kebutuhan)
-        // ImageIcon resizedIcon = new ImageIcon(image);
-
-        // // Menambahkan gambar maskot yang telah diubah ukurannya
-        // JLabel mascotLabel = new JLabel(resizedIcon);
-        // mascotLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        // rightContentPanel.add(mascotLabel, BorderLayout.SOUTH);
-
-        // Membuat panel teks
         JPanel textPanel = new JPanel();
         textPanel.setBackground(Color.ORANGE);
         textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
@@ -543,20 +492,13 @@ public class Main {
         cardLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         cardLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
-        // Menambahkan label ke panel teks
         textPanel.add(cardLabel);
-
-        // Membuat cardPanel untuk menampung gambar, teks, dan tombol
         JPanel cardPanel = new JPanel();
         cardPanel.setLayout(new BorderLayout());
         cardPanel.setBackground(Color.WHITE);
-
-        // // Menambahkan gambar dan teks ke panel card
-        // cardPanel.add(imageLabel, BorderLayout.CENTER);
         cardPanel.add(textPanel, BorderLayout.NORTH);
         rightContentPanel.add(cardPanel, BorderLayout.NORTH);
 
-        // Menambahkan panel kiri dan kanan ke contentPanel
         contentPanel.add(leftContentPanel);
         contentPanel.add(rightContentPanel);
 
@@ -579,7 +521,6 @@ public class Main {
         button.setForeground(Color.WHITE);
         button.setBorder(new CustomRoundedBorder(10, Color.ORANGE));
 
-        // Menambahkan ActionListener untuk mengubah warna latar belakang saat diklik
         button.addActionListener(e -> {
             if (text.equals("Logout")) {
                 int confirmed = JOptionPane.showConfirmDialog(mainFrame, "Are you sure you want to logout?",
@@ -594,10 +535,9 @@ public class Main {
             } else if (text.equals("Learn")) {
                 if (!isInMainScreen) {
                     mainFrame.dispose();
-                    showMainScreen(currentUser); // Beralih ke showMainScreen jika di showProfileScreen
-                    isInMainScreen = true; // Update status tampilan
+                    showMainScreen(currentUser);
+                    isInMainScreen = true;
                 }
-                // Jika sudah di showMainScreen, tidak perlu melakukan tindakan apa pun
             } else {
                 if (activeButton != null) {
                     activeButton.setBackground(new Color(46, 7, 63));
@@ -612,7 +552,6 @@ public class Main {
         return button;
     }
 
-    // Kelas untuk menyimpan data pemain dan skor
     public static class PlayerScore {
         private String name;
         private int score;
@@ -632,29 +571,52 @@ public class Main {
     }
 
     private Object[][] getLeaderboardData() {
-        // Konversi data leaderboard menjadi array 2D untuk JTable
+        List<Object[]> leaderboardData = dataLeaderboard();
+        if (leaderboardData == null || leaderboardData.isEmpty()) {
+            return new Object[][]{};
+        }
+
         Object[][] data = new Object[leaderboardData.size()][3];
         for (int i = 0; i < leaderboardData.size(); i++) {
-            PlayerScore player = leaderboardData.get(i);
-            data[i][0] = i + 1; // Rank
-            data[i][1] = player.getName(); // Player name
-            data[i][2] = player.getScore(); // Score
+            Object[] row = leaderboardData.get(i);
+            data[i][0] = i + 1;
+            data[i][1] = row[0];
+            data[i][2] = row[1];
         }
         return data;
-    }
+    }    
 
+    private List<Object[]> dataLeaderboard() {
+        List<Object[]> leaderboard = new ArrayList<>();
+    
+        String query = "SELECT nama, skor_tertinggi FROM pemain ORDER BY skor_tertinggi DESC LIMIT 10";
+    
+        try (Connection connection = Koneksi.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+    
+            while (rs.next()) {
+                String name = rs.getString("nama");
+                int score = rs.getInt("skor_tertinggi");
+                leaderboard.add(new Object[]{name, score});
+            }
+    
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        return leaderboard;
+    }
+    
     public void showProfileScreen(String username) {
-        // Hapus konten sebelumnya
         username = currentUser;
         mainFrame.getContentPane().removeAll();
 
         Object[] playerData = UserAuth.getPlayerProfile(username);
 
-        // Tambahkan sidebar dan header
         mainFrame.add(createSidebar(), BorderLayout.WEST);
         mainFrame.add(createHeader(username), BorderLayout.NORTH);
 
-        // Panel untuk konten profil
         JPanel profilePanel = new JPanel();
         profilePanel.setLayout(new BoxLayout(profilePanel, BoxLayout.Y_AXIS));
         profilePanel.setBackground(Color.WHITE);
@@ -676,12 +638,10 @@ public class Main {
         highScoreLabel.setFont(new Font("Arial", Font.PLAIN, 40));
         highScoreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Tambahkan gambar latar belakang
-        ImageIcon backgroundImage = new ImageIcon("D:\\PBO\\QuizIT_09\\Image\\Backgroundprofil.png");
+        ImageIcon backgroundImage = new ImageIcon("Image\\Backgroundprofil.png");
         JLabel backgroundLabel = new JLabel(backgroundImage);
         backgroundLabel.setLayout(new BorderLayout());
 
-        // Tambahkan panel profil ke dalam backgroundLabel
         profilePanel.setOpaque(false);
         backgroundLabel.add(profilePanel, BorderLayout.CENTER);
 
@@ -693,7 +653,6 @@ public class Main {
         profilePanel.add(Box.createRigidArea(new Dimension(0, 20)));
         profilePanel.add(highScoreLabel);
 
-        // Tambahkan panel profil ke center
         mainFrame.add(backgroundLabel, BorderLayout.CENTER);
         mainFrame.revalidate();
         mainFrame.repaint();
@@ -744,24 +703,18 @@ public class Main {
 
     public void handleQuizCompletion(String username, int score) {
         currentUser = username;
-        // Menyimpan skor ke leaderboard
         addScoreToLeaderboard(currentUser, score);
-
-        // Tampilkan leaderboard
-        showMainScreen(currentUser); // Atau metode lain untuk menampilkan leaderboard
+        showMainScreen(currentUser);
     }
 
     public void endQuiz(String playerName, int score) {
         currentUser = playerName;
-        // Tambahkan skor pemain ke leaderboard
         addScoreToLeaderboard(playerName, score);
-
-        // Tampilkan leaderboard atau perbarui tampilan
-        showMainScreen(playerName); // Atau metode lain untuk menampilkan leaderboard
+        showMainScreen(playerName);
     }
 
     public void showSomeMethod(String username) {
-        Quest quest = new Quest("Category", new Dimension(800, 600), username, this); // Pass username
+        Quest quest = new Quest("Category", new Dimension(800, 600), username, this);
         quest.setVisible(true);
     }
 

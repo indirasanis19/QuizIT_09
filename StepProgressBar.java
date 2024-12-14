@@ -1,10 +1,9 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-
+import javax.swing.*;
 
 public class StepProgressBar extends JPanel {
     private int stepCount;
@@ -26,7 +25,7 @@ public class StepProgressBar extends JPanel {
             stepLabel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
             stepLabel.setFont(new Font("Arial", Font.BOLD, 14));
             stepLabel.setHorizontalAlignment(SwingConstants.CENTER);
-            stepLabel.setPreferredSize(new Dimension(30, 30)); // Ukuran persegi
+            stepLabel.setPreferredSize(new Dimension(30, 30));
             stepLabel.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -57,11 +56,11 @@ public class StepProgressBar extends JPanel {
     public void highlightCurrentStep(int currentStep) {
         for (int i = 0; i < stepLabels.size(); i++) {
             if (i == currentStep) {
-                stepLabels.get(i).setBackground(new Color(255, 204, 0)); // Kuning kunyit
+                stepLabels.get(i).setBackground(new Color(255, 204, 0));
             } else if (stepColors.get(i) == Color.LIGHT_GRAY) {
-                stepLabels.get(i).setBackground(Color.LIGHT_GRAY); // Tetap abu-abu jika belum dijawab
+                stepLabels.get(i).setBackground(Color.LIGHT_GRAY);
             } else {
-                stepLabels.get(i).setBackground(stepColors.get(i)); // Warna sesuai status jawaban
+                stepLabels.get(i).setBackground(stepColors.get(i));
             }
         }
     }

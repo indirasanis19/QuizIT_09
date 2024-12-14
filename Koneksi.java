@@ -39,7 +39,7 @@ public class Koneksi {
         String createTablePemain = """
                 CREATE TABLE IF NOT EXISTS pemain (
                     id INT AUTO_INCREMENT PRIMARY KEY,
-                    nama VARCHAR(100) NOT NULL,
+                    nama VARCHAR(100) NOT NULL UNIQUE,
                     skor_terakhir INT DEFAULT 0,
                     skor_tertinggi INT DEFAULT 0
                 );
@@ -69,7 +69,6 @@ public class Koneksi {
         try (Statement statement = connection.createStatement()) {
             statement.execute(createTableUsers);
 
-            // Periksa apakah foreign key sudah ada
             ResultSet rs = statement.executeQuery(
                     "SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE " +
                             "WHERE TABLE_NAME = 'pemain' AND TABLE_SCHEMA = 'pbo_quizit' AND CONSTRAINT_NAME = 'FK_pemain_user';");
