@@ -8,6 +8,9 @@ public class Main {
     private static JButton activeButton = null;
     private JFrame welcomeFrame;
     private JFrame mainFrame;
+    private boolean isInMainScreen = true; // Menyimpan status tampilan saat ini
+    private String username;
+    private int id;
     private ArrayList<PlayerScore> leaderboardData = new ArrayList<>(); // Menyimpan data leaderboard
 
     public static void main(String[] args) {
@@ -311,7 +314,7 @@ public class Main {
         userNameLabel.setFont(new Font("Arial", Font.BOLD, 14));
         userNameLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
 
-        JLabel userIdLabel = new JLabel("ID-1809");
+        JLabel userIdLabel = new JLabel("ID-" + id);
         userIdLabel.setForeground(Color.WHITE);
         userIdLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
 
@@ -580,6 +583,16 @@ public class Main {
                     mainFrame.dispose();
                     showWelcomeScreen();
                 }
+            } else if (text.equals("Profile")) {
+                showProfileScreen(username); // Panggil metode untuk menampilkan profil
+                isInMainScreen = false; // Update status tampilan
+            } else if (text.equals("Learn")) {
+                if (!isInMainScreen) {
+                    mainFrame.dispose();
+                    showMainScreen(username); // Beralih ke showMainScreen jika di showProfileScreen
+                    isInMainScreen = true; // Update status tampilan
+                }
+                // Jika sudah di showMainScreen, tidak perlu melakukan tindakan apa pun
             } else {
                 if (activeButton != null) {
                     activeButton.setBackground(new Color(46, 7, 63));
@@ -623,6 +636,95 @@ public class Main {
             data[i][2] = player.getScore(); // Score
         }
         return data;
+    }
+
+    public void showProfileScreen(String username) {
+        // Hapus konten sebelumnya
+        mainFrame.getContentPane().removeAll();
+
+        // Tambahkan sidebar dan header
+        mainFrame.add(createSidebar(), BorderLayout.WEST);
+        mainFrame.add(createHeader(username), BorderLayout.NORTH);
+
+        // Panel untuk konten profil
+        JPanel profilePanel = new JPanel();
+        profilePanel.setLayout(new BoxLayout(profilePanel, BoxLayout.Y_AXIS));
+        profilePanel.setBackground(Color.WHITE);
+        profilePanel.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
+
+        JLabel profileLabel = new JLabel("Profile Information", SwingConstants.CENTER);
+        profileLabel.setFont(new Font("Arial", Font.BOLD, 50));
+        profileLabel.setForeground(Color.ORANGE);
+
+        JLabel usernameLabel = new JLabel("Username: " + username);
+        usernameLabel.setFont(new Font("Arial", Font.PLAIN, 40));
+
+        JLabel scoreLabel = new JLabel("Score: " + getUserScore(username));
+        scoreLabel.setFont(new Font("Arial", Font.PLAIN, 40));
+
+        // Tambahkan gambar latar belakang
+        ImageIcon backgroundImage = new ImageIcon("D:\\PBO\\QuizIT_09\\Image\\Backgroundprofil.png");
+        JLabel backgroundLabel = new JLabel(backgroundImage);
+        backgroundLabel.setLayout(new BorderLayout());
+
+        // Tambahkan panel profil ke dalam backgroundLabel
+        profilePanel.setOpaque(false);
+        backgroundLabel.add(profilePanel, BorderLayout.CENTER);
+
+        profilePanel.add(profileLabel);
+        profilePanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        profilePanel.add(usernameLabel);
+        profilePanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        profilePanel.add(scoreLabel);
+
+        // Tambahkan panel profil ke center
+        mainFrame.add(backgroundLabel, BorderLayout.CENTER);
+        mainFrame.revalidate();
+        mainFrame.repaint();
+    }
+
+    private JPanel createSidebar() {
+        JPanel sidebarPanel = new JPanel();
+        sidebarPanel.setBackground(new Color(46, 7, 63));
+        sidebarPanel.setPreferredSize(new Dimension(200, 0));
+        sidebarPanel.setLayout(new BoxLayout(sidebarPanel, BoxLayout.Y_AXIS));
+        sidebarPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+
+        sidebarPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        sidebarPanel.add(createSidebarButton("Learn", "Image\\home-outline.png"));
+        sidebarPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        sidebarPanel.add(createSidebarButton("Profile", "Image\\person-outline.png"));
+        sidebarPanel.add(Box.createVerticalGlue());
+        sidebarPanel.add(createSidebarButton("Logout", "Image\\Logout.png"));
+        sidebarPanel.add(Box.createRigidArea(new Dimension(0, 30)));
+
+        return sidebarPanel;
+    }
+
+    private JPanel createHeader(String username) {
+        JPanel headerPanel = new JPanel();
+        headerPanel.setBackground(new Color(62, 34, 75));
+        headerPanel.setPreferredSize(new Dimension(150, 80));
+        headerPanel.setLayout(new BorderLayout());
+
+        JLabel titleLabel = new JLabel("QuizIT", SwingConstants.CENTER);
+        titleLabel.setForeground(Color.ORANGE);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 34));
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(10, 50, 0, 10));
+
+        headerPanel.add(titleLabel, BorderLayout.WEST);
+
+        JPanel userInfoPanel = new JPanel();
+        userInfoPanel.setBackground(new Color(62, 34, 75));
+        userInfoPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+
+        return headerPanel;
+    }
+
+    // Metode untuk mendapatkan skor pengguna (misalnya)
+    private int getUserScore(String username) {
+        // Logika untuk mendapatkan skor pengguna dari leaderboard atau database
+        return 100; // Contoh nilai
     }
 
 }
