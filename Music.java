@@ -15,7 +15,7 @@ public class Music extends Thread {
         try {
             File soundFile = new File(filePath);
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
-            clip = AudioSystem.getClip();
+            clip = AudioSystem.getClip(); // hapus
             clip.open(audioStream);
             clip.start();
             clip.drain();
