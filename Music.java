@@ -4,12 +4,12 @@ import javax.sound.sampled.*;
 
 public class Music extends Thread {
     private String filePath;
-    private boolean loop;
+    private Clip clip;
 
-    public Music(String filePath, boolean loop) {
+    public Music(String filePath) {
         this.filePath = filePath;
-        this.loop = loop;
     }
+
     @Override
     public void run() {
         try {
@@ -17,16 +17,18 @@ public class Music extends Thread {
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
             Clip clip = AudioSystem.getClip();
             clip.open(audioStream);
-            if(loop) {
-                clip.loop(Clip.LOOP_CONTINUOUSLY);
-            }else{
-                clip.start();
-            }
-            if(!loop) {
-                clip.drain();
-            }
+            clip.start();
+            clip.drain();
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
+    }
+
+    public void stopMusic() {
+        if (clip != null && clip.isRunning()) {
+            clip.stop();
+            clip.close();
+        }
+        interrupt();
     }
 }

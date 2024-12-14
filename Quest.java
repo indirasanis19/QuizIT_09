@@ -10,13 +10,14 @@ public class Quest extends JFrame {
     // private JProgressBar progressBar;
     private List<Question> questions = new ArrayList<>();
     private boolean[] questionAnswered;
+    private Music bgm;
 
     private JLabel questionLabel;
     private JButton optionA, optionB, optionC, optionD;
     private boolean isAnswered = false;
     private StepProgressBar progressBar;
     private Timer timer;
-    private int timeLeft = 30;
+    private int timeLeft = 600;
 
     private JLabel timerLabel;
     private JPanel startPanel;
@@ -269,13 +270,13 @@ public class Quest extends JFrame {
         String correctOption = questions.get(currentQuestionIndex).getCorrectOption();
 
         if (selectedOption.equals(correctOption)) {
-            Music correct = new Music("music//correct.wav", false);
+            Music correct = new Music("music//correct.wav");
             correct.start();
             JOptionPane.showMessageDialog(this, "Correct!");
             progressBar.updateStepColor(currentQuestionIndex, Color.GREEN);
             score++; // Tambah skor untuk jawaban benar
         } else {
-            Music wrong = new Music("music//wrong.wav", false);
+            Music wrong = new Music("music//wrong.wav");
             wrong.start();
             JOptionPane.showMessageDialog(this, "Wrong!");
             progressBar.updateStepColor(currentQuestionIndex, Color.RED);
@@ -292,6 +293,8 @@ public class Quest extends JFrame {
         if (timer != null) {
             timer.stop();
         }
+        bgm = new Music("Music//bgm.wav");
+        bgm.stopMusic();
         super.dispose();
     }
 
@@ -368,6 +371,8 @@ public class Quest extends JFrame {
         completeButton.setBorder(new CustomRoundedBorder(10, new Color(46, 7, 63))); // Custom border
 
         completeButton.addActionListener(e -> {
+            bgm = new Music("Music//bgm.wav");
+            bgm.stopMusic();
             dialog.dispose(); // Close dialog
             this.dispose(); // Close Quest window
             mainApp.showMainScreen(username); // Return to showMainScreen

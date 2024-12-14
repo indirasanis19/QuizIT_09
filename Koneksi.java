@@ -41,11 +41,7 @@ public class Koneksi {
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     nama VARCHAR(100) NOT NULL,
                     skor_terakhir INT DEFAULT 0,
-                    skor_tertinggi INT DEFAULT 0,
-                    soal_terjawab INT DEFAULT 0,
-                    soal_benar INT DEFAULT 0,
-                    soal_salah INT DEFAULT 0,
-                    waktu_selesai TIME DEFAULT NULL
+                    skor_tertinggi INT DEFAULT 0
                 );
                 """;
         try (Statement statement = connection.createStatement()) {

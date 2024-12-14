@@ -9,12 +9,17 @@ public class Main {
     private JFrame welcomeFrame;
     private JFrame mainFrame;
     private boolean isInMainScreen = true; // Menyimpan status tampilan saat ini
-    private String username;
+    private static String currentUser;
     private int id;
+    private Music bgm;
     private ArrayList<PlayerScore> leaderboardData = new ArrayList<>(); // Menyimpan data leaderboard
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Main().showWelcomeScreen());
+        SwingUtilities.invokeLater(() -> {
+            Data data = new Data();
+            data.questions();
+            new Main().showWelcomeScreen();
+        });
     }
 
     public void showWelcomeScreen() {
@@ -97,8 +102,9 @@ public class Main {
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
             } else {
-                if (UserAuth.login(username, password)) { // Periksa hasil login
-                    showMainScreen(username);
+                if (UserAuth.login(username, password)) {
+                    currentUser = username;
+                    showMainScreen(currentUser);
                     welcomeFrame.dispose();
                 } else {
                     //
@@ -232,10 +238,8 @@ public class Main {
 
         // Event untuk tombol back
         backButton.addActionListener(e -> {
-            welcomeFrame.getContentPane().removeAll(); // Menghapus semua komponen yang ada
-            showWelcomeScreen(); // Kembali ke layar login
-            welcomeFrame.revalidate();
-            welcomeFrame.repaint();
+            welcomeFrame.dispose();
+            showWelcomeScreen();
         });
 
         regPanel.add(Box.createRigidArea(new Dimension(0, 20)));
@@ -263,6 +267,7 @@ public class Main {
     }
 
     public void showMainScreen(String username) {
+        currentUser = username;
         // Frame untuk layar utama
         mainFrame = new JFrame("QuizIT");
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -421,7 +426,7 @@ public class Main {
 
             categoryButton.addActionListener(e -> {
                 SwingUtilities.invokeLater(() -> {
-                    Music bgm = new Music("music//bgm.wav", false);
+                    bgm = new Music("Music//bgm.wav");
                     bgm.start();
                     new Quest(category, mainFrame.getSize(), username, this).setVisible(true);
                     mainFrame.dispose();
@@ -584,12 +589,12 @@ public class Main {
                     showWelcomeScreen();
                 }
             } else if (text.equals("Profile")) {
-                showProfileScreen(username); // Panggil metode untuk menampilkan profil
-                isInMainScreen = false; // Update status tampilan
+                showProfileScreen(currentUser);
+                isInMainScreen = false;
             } else if (text.equals("Learn")) {
                 if (!isInMainScreen) {
                     mainFrame.dispose();
-                    showMainScreen(username); // Beralih ke showMainScreen jika di showProfileScreen
+                    showMainScreen(currentUser); // Beralih ke showMainScreen jika di showProfileScreen
                     isInMainScreen = true; // Update status tampilan
                 }
                 // Jika sudah di showMainScreen, tidak perlu melakukan tindakan apa pun
@@ -640,7 +645,10 @@ public class Main {
 
     public void showProfileScreen(String username) {
         // Hapus konten sebelumnya
+        username = currentUser;
         mainFrame.getContentPane().removeAll();
+
+        Object[] playerData = UserAuth.getPlayerProfile(username);
 
         // Tambahkan sidebar dan header
         mainFrame.add(createSidebar(), BorderLayout.WEST);
@@ -656,11 +664,17 @@ public class Main {
         profileLabel.setFont(new Font("Arial", Font.BOLD, 50));
         profileLabel.setForeground(Color.ORANGE);
 
-        JLabel usernameLabel = new JLabel("Username: " + username);
+        JLabel usernameLabel = new JLabel("Username: " + (playerData != null ? playerData[0] : "Unknown"));
         usernameLabel.setFont(new Font("Arial", Font.PLAIN, 40));
+        usernameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel scoreLabel = new JLabel("Score: " + getUserScore(username));
-        scoreLabel.setFont(new Font("Arial", Font.PLAIN, 40));
+        JLabel lastScoreLabel = new JLabel("Last Score: " + (playerData != null ? playerData[1] : 0));
+        lastScoreLabel.setFont(new Font("Arial", Font.PLAIN, 40));
+        lastScoreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    
+        JLabel highScoreLabel = new JLabel("High Score: " + (playerData != null ? playerData[2] : 0));
+        highScoreLabel.setFont(new Font("Arial", Font.PLAIN, 40));
+        highScoreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // Tambahkan gambar latar belakang
         ImageIcon backgroundImage = new ImageIcon("D:\\PBO\\QuizIT_09\\Image\\Backgroundprofil.png");
@@ -675,7 +689,9 @@ public class Main {
         profilePanel.add(Box.createRigidArea(new Dimension(0, 20)));
         profilePanel.add(usernameLabel);
         profilePanel.add(Box.createRigidArea(new Dimension(0, 20)));
-        profilePanel.add(scoreLabel);
+        profilePanel.add(lastScoreLabel);
+        profilePanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        profilePanel.add(highScoreLabel);
 
         // Tambahkan panel profil ke center
         mainFrame.add(backgroundLabel, BorderLayout.CENTER);
@@ -721,26 +737,22 @@ public class Main {
         return headerPanel;
     }
 
-    // Metode untuk mendapatkan skor pengguna (misalnya)
-    private int getUserScore(String username) {
-        // Logika untuk mendapatkan skor pengguna dari leaderboard atau database
-        return 100; // Contoh nilai
-    }
-
     public void addScoreToLeaderboard(String playerName, int score) {
-        // Tambahkan skor pemain ke leaderboard
+        currentUser = playerName;
         leaderboardData.add(new PlayerScore(playerName, score));
     }
 
     public void handleQuizCompletion(String username, int score) {
+        currentUser = username;
         // Menyimpan skor ke leaderboard
-        addScoreToLeaderboard(username, score);
+        addScoreToLeaderboard(currentUser, score);
 
         // Tampilkan leaderboard
-        showMainScreen(username); // Atau metode lain untuk menampilkan leaderboard
+        showMainScreen(currentUser); // Atau metode lain untuk menampilkan leaderboard
     }
 
     public void endQuiz(String playerName, int score) {
+        currentUser = playerName;
         // Tambahkan skor pemain ke leaderboard
         addScoreToLeaderboard(playerName, score);
 
