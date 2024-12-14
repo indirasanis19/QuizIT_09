@@ -419,7 +419,7 @@ public class Main {
             categoryLabel.setFont(new Font("Arial", Font.BOLD, 14));
             textPanel.add(categoryLabel);
 
-            JLabel questionCountLabel = new JLabel("15 Questions");
+            JLabel questionCountLabel = new JLabel("30 Questions");
             questionCountLabel.setFont(new Font("Arial", Font.PLAIN, 12));
             textPanel.add(questionCountLabel);
 
@@ -432,7 +432,7 @@ public class Main {
 
             JProgressBar scoreBar = new JProgressBar(0, 30);
             scoreBar.setValue(26);
-            scoreBar.setString("0/15");
+            scoreBar.setString("26/30");
             scoreBar.setStringPainted(true);
             scoreBar.setBackground(new Color(255, 255, 255));
             scoreBar.setForeground(new Color(46, 7, 63));

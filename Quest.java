@@ -15,7 +15,7 @@ public class Quest extends JFrame {
     private boolean isAnswered = false;
     private StepProgressBar progressBar;
     private Timer timer;
-    private int timeLeft = 10;
+    private int timeLeft = 20;
     private JLabel timerLabel;
     private JPanel startPanel;
     private int score = 0;
@@ -290,22 +290,19 @@ public class Quest extends JFrame {
     }
 
     private void endQuiz() {
-        // Create dialog
         JDialog dialog = new JDialog(this, "Quiz Complete", true);
         dialog.setSize(600, 400);
         dialog.setLayout(new BorderLayout());
 
-        // Use custom panel with background image
         BackgroundPanel panel = new BackgroundPanel("D:\\PBO\\QuizIT_09\\Image\\skor.png");
-        panel.setLayout(new GridBagLayout());
+        panel.setLayout(new BorderLayout());
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(20, 20, 20, 20); // Add some padding
-
-        // Create a panel for score labels
         JPanel scorePanel = new JPanel();
         scorePanel.setLayout(new GridBagLayout());
-        scorePanel.setOpaque(false); // Make the panel transparent
+        scorePanel.setOpaque(false);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(20, 20, 20, 20);
 
         JLabel titleLabel = new JLabel("YOUR SCORE");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 36));
@@ -321,13 +318,13 @@ public class Quest extends JFrame {
         gbc.gridy = 1;
         scorePanel.add(scoreLabel, gbc);
 
-        // Add the score panel to the main panel
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.CENTER;
-        panel.add(scorePanel, gbc);
+        panel.add(scorePanel, BorderLayout.CENTER);
 
-        // Create the "Complete" button with the same background
+        // Panel untuk tombol di bagian tengah bawah
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setOpaque(false);
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+
         JButton completeButton = new JButton("Complete");
         completeButton.setFont(new Font("Arial", Font.BOLD, 18));
         completeButton.setForeground(Color.WHITE);
@@ -335,24 +332,22 @@ public class Quest extends JFrame {
         completeButton.setFocusPainted(false);
         completeButton.setBorderPainted(true);
         completeButton.setBorder(new CustomRoundedBorder(10, new Color(46, 7, 63)));
+
         completeButton.addActionListener(e -> {
-            bgm = new Music("Music//bgm.wav");
             bgm.stopMusic();
-            dialog.dispose(); // Close dialog
+            updatePlayerScore(username, score);
+            dialog.dispose();
             this.dispose();
             mainApp.showMainScreen(username);
         });
 
-        // Add the "Complete" button to the main panel
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.CENTER;
-        panel.add(completeButton, gbc);
+        buttonPanel.add(completeButton);
+        panel.add(buttonPanel, BorderLayout.SOUTH); // Tambahkan tombol di bagian bawah
 
         dialog.add(panel, BorderLayout.CENTER);
-
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
+        bgm.stopMusic();
     }
 
     public void updatePlayerScore(String username, int newScore) {
