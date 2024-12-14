@@ -303,6 +303,8 @@ public class Main {
         userNameLabel.setFont(new Font("Arial", Font.BOLD, 14));
         userNameLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
 
+        int nextId = getNextPlayerId(username);
+        id = nextId;
         JLabel userIdLabel = new JLabel("ID-" + id);
         userIdLabel.setForeground(Color.WHITE);
         userIdLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
@@ -310,12 +312,7 @@ public class Main {
         nameIdPanel.add(userNameLabel);
         nameIdPanel.add(userIdLabel);
 
-        JLabel userPointsLabel = new JLabel("💎 0");
-        userPointsLabel.setForeground(Color.YELLOW);
-        userPointsLabel.setBorder(BorderFactory.createEmptyBorder(10, 50, 0, 30));
-
         userInfoPanel.add(nameIdPanel);
-        userInfoPanel.add(userPointsLabel);
         headerPanel.add(userInfoPanel, BorderLayout.EAST);
 
         JPanel contentPanel = new JPanel();
@@ -422,7 +419,7 @@ public class Main {
             categoryLabel.setFont(new Font("Arial", Font.BOLD, 14));
             textPanel.add(categoryLabel);
 
-            JLabel questionCountLabel = new JLabel("30 Questions");
+            JLabel questionCountLabel = new JLabel("15 Questions");
             questionCountLabel.setFont(new Font("Arial", Font.PLAIN, 12));
             textPanel.add(questionCountLabel);
 
@@ -435,7 +432,7 @@ public class Main {
 
             JProgressBar scoreBar = new JProgressBar(0, 30);
             scoreBar.setValue(26);
-            scoreBar.setString("26/30");
+            scoreBar.setString("0/15");
             scoreBar.setStringPainted(true);
             scoreBar.setBackground(new Color(255, 255, 255));
             scoreBar.setForeground(new Color(46, 7, 63));
@@ -705,6 +702,25 @@ public class Main {
     public void showSomeMethod(String username) {
         Quest quest = new Quest("Category", new Dimension(800, 600), username, this);
         quest.setVisible(true);
+    }
+
+    private int getNextPlayerId(String username) {
+        int nextId = 1; // Start from 1
+        String query = "SELECT id FROM pemain WHERE nama = ?";
+
+        try (Connection connection = Koneksi.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, username);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    nextId = rs.getInt("id");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return nextId;
     }
 
 }
