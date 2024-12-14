@@ -15,7 +15,7 @@ public class Quest extends JFrame {
     private boolean isAnswered = false;
     private StepProgressBar progressBar;
     private Timer timer;
-    private int timeLeft = 20;
+    private int timeLeft = 600;
     private JLabel timerLabel;
     private JPanel startPanel;
     private int score = 0;
@@ -68,7 +68,6 @@ public class Quest extends JFrame {
         categoryLabel.setBorder(BorderFactory.createEmptyBorder(20, 50, 30, 50));
         headerPanel.add(categoryLabel, BorderLayout.NORTH);
 
-        progressBar = new StepProgressBar(15);
         progressBar = new StepProgressBar(15);
         progressBar.setStepClickListener(stepIndex -> {
             currentQuestionIndex = stepIndex;
@@ -127,8 +126,8 @@ public class Quest extends JFrame {
         navigationPanel.setBackground(Color.WHITE);
         navigationPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
-        String previousIconPath = "D:\\PBO\\QuizIT_09\\Image\\pref.png";
-        String nextIconPath = "D:\\PBO\\QuizIT_09\\Image\\n" + "ext.png";
+        String previousIconPath = "Image\\pref.png";
+        String nextIconPath = "Image\\n" + "ext.png";
 
         ImageIcon previousIcon = new ImageIcon(previousIconPath);
         ImageIcon nextIcon = new ImageIcon(nextIconPath);
@@ -294,7 +293,7 @@ public class Quest extends JFrame {
         dialog.setSize(600, 400);
         dialog.setLayout(new BorderLayout());
 
-        BackgroundPanel panel = new BackgroundPanel("D:\\PBO\\QuizIT_09\\Image\\skor.png");
+        BackgroundPanel panel = new BackgroundPanel("Image\\skor.png");
         panel.setLayout(new BorderLayout());
 
         JPanel scorePanel = new JPanel();
@@ -333,9 +332,9 @@ public class Quest extends JFrame {
         completeButton.setBorder(new CustomRoundedBorder(10, new Color(46, 7, 63)));
 
         completeButton.addActionListener(e -> {
-            bgm.stopMusic();
             updatePlayerScore(username, score);
-            dialog.dispose();
+            Main.updatePlayerStats(username, score, category.toLowerCase());
+            bgm.stopMusic();
             this.dispose();
             mainApp.showMainScreen(username);
         });

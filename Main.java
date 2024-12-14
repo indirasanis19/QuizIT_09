@@ -14,6 +14,7 @@ public class Main {
     private static String currentUser;
     private int id;
     private ArrayList<PlayerScore> leaderboardData = new ArrayList<>();
+    private String selectedCategory = "";
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -370,7 +371,6 @@ public class Main {
             categoryButton.setBackground(Color.WHITE);
             categoryButton.setHorizontalTextPosition(SwingConstants.CENTER);
             categoryButton.setVerticalTextPosition(SwingConstants.BOTTOM);
-
             categoryButton.setFont(customFont);
             categoryButton.setMargin(new Insets(10, 50, 10, 10));
             categoryButton.setBorder(new CustomRoundedBorder(10, Color.GRAY));
@@ -382,8 +382,9 @@ public class Main {
             buttonPanel.add(categoryButton);
 
             categoryButton.addActionListener(e -> {
+                selectedCategory = category.toLowerCase();
                 SwingUtilities.invokeLater(() -> {
-                    new Quest(category, mainFrame.getSize(), username, this).setVisible(true);
+                    new Quest(selectedCategory, mainFrame.getSize(), username, this).setVisible(true);
                     mainFrame.dispose();
                 });
             });
@@ -401,6 +402,22 @@ public class Main {
         categoriesPanel.add(labelPanel);
 
         for (int i = 0; i < categories.length; i++) {
+            String category = categories[i].toLowerCase();
+            String query = "SELECT skor_" + category + " FROM pemain WHERE nama = ?";
+            int highestScore = 0;
+        
+            try (Connection connection = Koneksi.getConnection();
+                 PreparedStatement stmt = connection.prepareStatement(query)) {
+                stmt.setString(1, currentUser);
+                ResultSet rs = stmt.executeQuery();
+        
+                if (rs.next()) {
+                    highestScore = rs.getInt(1);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
             JPanel scorePanel = new JPanel();
             scorePanel.setLayout(new BoxLayout(scorePanel, BoxLayout.Y_AXIS));
             scorePanel.setPreferredSize(new Dimension(400, 80));
@@ -430,9 +447,9 @@ public class Main {
             combinedPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
             combinedPanel.setBackground(Color.WHITE);
 
-            JProgressBar scoreBar = new JProgressBar(0, 30);
-            scoreBar.setValue(26);
-            scoreBar.setString("26/30");
+            JProgressBar scoreBar = new JProgressBar(0, 15);
+            scoreBar.setValue(highestScore);
+            scoreBar.setString(highestScore + "/15");
             scoreBar.setStringPainted(true);
             scoreBar.setBackground(new Color(255, 255, 255));
             scoreBar.setForeground(new Color(46, 7, 63));
@@ -687,14 +704,16 @@ public class Main {
         leaderboardData.add(new PlayerScore(playerName, score));
     }
 
-    public void handleQuizCompletion(String username, int score) {
+    public void handleQuizCompletion(String username, int skorTerakhir) {
         currentUser = username;
-        addScoreToLeaderboard(currentUser, score);
+        updatePlayerStats(currentUser, skorTerakhir, selectedCategory);
+        addScoreToLeaderboard(currentUser, skorTerakhir);
         showMainScreen(currentUser);
     }
 
-    public void endQuiz(String playerName, int score) {
+    public void endQuiz(String playerName, int score, String kategori) {
         currentUser = playerName;
+        updatePlayerStats(playerName, score, kategori);
         addScoreToLeaderboard(playerName, score);
         showMainScreen(playerName);
     }
@@ -705,7 +724,7 @@ public class Main {
     }
 
     private int getNextPlayerId(String username) {
-        int nextId = 1; // Start from 1
+        int nextId = -1;
         String query = "SELECT id FROM pemain WHERE nama = ?";
 
         try (Connection connection = Koneksi.getConnection();
@@ -723,4 +742,33 @@ public class Main {
         return nextId;
     }
 
+    public static void updatePlayerStats(String username, int skorTerakhir, String kategori) {
+        try (Connection conn = Koneksi.getConnection()) {
+            if (conn == null) return;
+    
+            String query = "SELECT skor_" + kategori + ", skor_tertinggi FROM pemain WHERE nama = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+    
+            if (rs.next()) {
+                int skorKategoriTertinggi = rs.getInt(1);
+                int skorTertinggi = rs.getInt(2);
+    
+                int skorKategoriBaru = Math.max(skorKategoriTertinggi, skorTerakhir);
+                int skorBaru = Math.max(skorTertinggi, skorTerakhir);
+    
+                String updateQuery = "UPDATE pemain SET skor_" + kategori + " = ?, skor_tertinggi = ?, skor_terakhir = ? WHERE nama = ?";
+                PreparedStatement updateStmt = conn.prepareStatement(updateQuery);
+                updateStmt.setInt(1, skorKategoriBaru);
+                updateStmt.setInt(2, skorBaru);
+                updateStmt.setInt(3, skorTerakhir);
+                updateStmt.setString(4, username);
+    
+                updateStmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
