@@ -127,13 +127,19 @@ public class Quest extends JFrame {
         navigationPanel.setBackground(Color.WHITE);
         navigationPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
-        JButton previousButton = new JButton("◀ Previous");
-        JButton nextButton = new JButton("Next ▶");
+        String previousIconPath = "D:\\PBO\\QuizIT_09\\Image\\pref.png";
+        String nextIconPath = "D:\\PBO\\QuizIT_09\\Image\\n" + "ext.png";
+
+        ImageIcon previousIcon = new ImageIcon(previousIconPath);
+        ImageIcon nextIcon = new ImageIcon(nextIconPath);
+
+        JButton previousButton = new JButton(previousIcon);
+        JButton nextButton = new JButton(nextIcon);
         previousButton.addActionListener(e -> navigateQuestion(-1));
         nextButton.addActionListener(e -> navigateQuestion(1));
 
         previousButton.setFont(new Font("Arial", Font.BOLD, 14));
-        previousButton.setBackground(Color.WHITE);
+        previousButton.setBackground(new Color(245, 201, 29));
         previousButton.setFocusPainted(false);
 
         nextButton.setFont(new Font("Arial", Font.BOLD, 14));
@@ -284,36 +290,44 @@ public class Quest extends JFrame {
     }
 
     private void endQuiz() {
+        // Create dialog
         JDialog dialog = new JDialog(this, "Quiz Complete", true);
         dialog.setSize(600, 400);
         dialog.setLayout(new BorderLayout());
 
-        BackgroundPanel panel = new BackgroundPanel("path/to/your/background/image.jpg");
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        // Use custom panel with background image
+        BackgroundPanel panel = new BackgroundPanel("D:\\PBO\\QuizIT_09\\Image\\skor.png");
+        panel.setLayout(new GridBagLayout());
 
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(20, 20, 20, 20); // Add some padding
+
+        // Create a panel for score labels
         JPanel scorePanel = new JPanel();
-        scorePanel.setLayout(new BoxLayout(scorePanel, BoxLayout.Y_AXIS));
-        scorePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        scorePanel.setLayout(new GridBagLayout());
+        scorePanel.setOpaque(false); // Make the panel transparent
 
         JLabel titleLabel = new JLabel("YOUR SCORE");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 36));
-        titleLabel.setForeground(Color.ORANGE);
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        scorePanel.add(titleLabel);
+        titleLabel.setForeground(Color.WHITE);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        scorePanel.add(titleLabel, gbc);
 
         JLabel scoreLabel = new JLabel(" " + score);
-        scoreLabel.setFont(new Font("Arial", Font.BOLD, 48));
-        scoreLabel.setForeground(Color.ORANGE);
-        scoreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        scorePanel.add(scoreLabel);
+        scoreLabel.setFont(new Font("Arial", Font.BOLD, 80));
+        scoreLabel.setForeground(Color.WHITE);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        scorePanel.add(scoreLabel, gbc);
 
-        panel.add(Box.createVerticalGlue());
-        panel.add(scorePanel);
-        panel.add(Box.createVerticalStrut(20));
+        // Add the score panel to the main panel
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.CENTER;
+        panel.add(scorePanel, gbc);
 
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-
+        // Create the "Complete" button with the same background
         JButton completeButton = new JButton("Complete");
         completeButton.setFont(new Font("Arial", Font.BOLD, 18));
         completeButton.setForeground(Color.WHITE);
@@ -321,22 +335,24 @@ public class Quest extends JFrame {
         completeButton.setFocusPainted(false);
         completeButton.setBorderPainted(true);
         completeButton.setBorder(new CustomRoundedBorder(10, new Color(46, 7, 63)));
-
         completeButton.addActionListener(e -> {
+            bgm = new Music("Music//bgm.wav");
             bgm.stopMusic();
-            updatePlayerScore(username, score);
-            dialog.dispose();
+            dialog.dispose(); // Close dialog
             this.dispose();
             mainApp.showMainScreen(username);
         });
 
-        buttonPanel.add(completeButton);
-        panel.add(buttonPanel);
+        // Add the "Complete" button to the main panel
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.CENTER;
+        panel.add(completeButton, gbc);
 
         dialog.add(panel, BorderLayout.CENTER);
+
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
-        bgm.stopMusic();
     }
 
     public void updatePlayerScore(String username, int newScore) {
