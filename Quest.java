@@ -16,13 +16,35 @@ public class Quest extends JFrame {
     private boolean isAnswered = false;
     private StepProgressBar progressBar;
     private Timer timer;
-    private int timeLeft = 900;
+    private int timeLeft = 30;
 
     private JLabel timerLabel;
     private JPanel startPanel;
 
-    public Quest(String category, Dimension mainFrameSize) {
+    private int score = 0; // Menyimpan skor total
+
+    private Main mainApp; // Reference to Main class
+    private String username; // Member variable for username
+
+    // Kelas untuk panel latar belakang
+    class BackgroundPanel extends JPanel {
+        private Image backgroundImage;
+
+        public BackgroundPanel(String imagePath) {
+            backgroundImage = new ImageIcon(imagePath).getImage();
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+        }
+    }
+
+    public Quest(String category, Dimension mainFrameSize, String username, Main mainApp) {
         this.category = category;
+        this.username = username; // Store the username
+        this.mainApp = mainApp; // Store the reference
         initialize(mainFrameSize);
         loadQuestions();
         displayQuestion(0);
@@ -141,7 +163,7 @@ public class Quest extends JFrame {
             } else {
                 ((Timer) e.getSource()).stop();
                 JOptionPane.showMessageDialog(this, "Time is up!");
-                navigateQuest(1);
+                endQuiz(); // Panggil endQuiz ketika waktu habis
             }
         });
         timer.start();
@@ -212,9 +234,9 @@ public class Quest extends JFrame {
             } else {
                 enableButtons();
             }
-    
-            // Reset status jawaban 
-            isAnswered = false; 
+
+            // Reset status jawaban
+            isAnswered = false;
         }
     }
 
@@ -237,6 +259,9 @@ public class Quest extends JFrame {
         if (newIndex >= 0 && newIndex < questions.size()) {
             currentQuestionIndex = newIndex;
             displayQuestion(currentQuestionIndex);
+        } else {
+            // Jika sudah menjawab semua pertanyaan, panggil endQuiz
+            endQuiz();
         }
     }
 
@@ -248,11 +273,13 @@ public class Quest extends JFrame {
             correct.start();
             JOptionPane.showMessageDialog(this, "Correct!");
             progressBar.updateStepColor(currentQuestionIndex, Color.GREEN);
+            score++; // Tambah skor untuk jawaban benar
         } else {
             Music wrong = new Music("music//wrong.wav", false);
             wrong.start();
             JOptionPane.showMessageDialog(this, "Wrong!");
             progressBar.updateStepColor(currentQuestionIndex, Color.RED);
+            // Tidak perlu menambah skor untuk jawaban salah
         }
 
         questionAnswered[currentQuestionIndex] = true;
@@ -268,22 +295,22 @@ public class Quest extends JFrame {
         super.dispose();
     }
 
-    private void navigateQuest(int direction) {
-        int newIndex = currentQuestionIndex + direction;
-        if (newIndex >= 0 && newIndex < questions.size()) {
-            currentQuestionIndex = newIndex;
-            displayQuestion(currentQuestionIndex);
-            resetTimer(); // Reset timer setiap navigasi
-        }
-    }
+    // private void navigateQuest(int direction) {
+    //     int newIndex = currentQuestionIndex + direction;
+    //     if (newIndex >= 0 && newIndex < questions.size()) {
+    //         currentQuestionIndex = newIndex;
+    //         displayQuestion(currentQuestionIndex);
+    //         resetTimer(); // Reset timer setiap navigasi
+    //     }
+    // }
 
-    private void resetTimer() {
-        if (timer != null) {
-            timer.stop();
-        }
-        timeLeft = 900;
-        timer.start();
-    }
+    // private void resetTimer() {
+    //     if (timer != null) {
+    //         timer.stop();
+    //     }
+    //     timeLeft = 300;
+    //     timer.start();
+    // }
 
     // Format waktu dalam jam:menit:detik
     private String formatTime(int timeInSeconds) {
@@ -293,4 +320,68 @@ public class Quest extends JFrame {
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
+    private void endQuiz() {
+        // Create dialog
+        JDialog dialog = new JDialog(this, "Quiz Complete", true);
+        dialog.setSize(600, 400);
+        dialog.setLayout(new BorderLayout());
+
+        // Use custom panel with background image
+        BackgroundPanel panel = new BackgroundPanel("path/to/your/background/image.jpg");
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        // Create a panel for score labels
+        JPanel scorePanel = new JPanel();
+        scorePanel.setLayout(new BoxLayout(scorePanel, BoxLayout.Y_AXIS)); // Vertical layout
+        scorePanel.setAlignmentX(Component.CENTER_ALIGNMENT); // Center the score panel
+
+        // Label for "YOUR SCORE"
+        JLabel titleLabel = new JLabel("YOUR SCORE");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 36));
+        titleLabel.setForeground(Color.ORANGE);
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        scorePanel.add(titleLabel);
+
+        // Label for the actual score
+        JLabel scoreLabel = new JLabel(" " + score);
+        scoreLabel.setFont(new Font("Arial", Font.BOLD, 48)); // Larger font for score
+        scoreLabel.setForeground(Color.ORANGE);
+        scoreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        scorePanel.add(scoreLabel);
+
+        // Add score panel to the main panel
+        panel.add(Box.createVerticalGlue()); // Add flexible space before the score
+        panel.add(scorePanel); // Add score panel
+        panel.add(Box.createVerticalStrut(20)); // Add space between score and button
+
+        // Panel for button
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER)); // Center the button
+
+        // Complete button
+        JButton completeButton = new JButton("Complete");
+        completeButton.setFont(new Font("Arial", Font.BOLD, 18));
+        completeButton.setForeground(Color.WHITE);
+        completeButton.setBackground(new Color(46, 7, 63)); // Background color
+        completeButton.setFocusPainted(false);
+        completeButton.setBorderPainted(true);
+        completeButton.setBorder(new CustomRoundedBorder(10, new Color(46, 7, 63))); // Custom border
+
+        completeButton.addActionListener(e -> {
+            dialog.dispose(); // Close dialog
+            this.dispose(); // Close Quest window
+            mainApp.showMainScreen(username); // Return to showMainScreen
+        });
+        
+        buttonPanel.add(completeButton);
+
+        // Add button panel to the main panel
+        panel.add(buttonPanel); // Add button panel
+
+        // Add background panel to dialog
+        dialog.add(panel, BorderLayout.CENTER); // Place panel in the center
+
+        dialog.setLocationRelativeTo(this); // Center the dialog
+        dialog.setVisible(true);
+    }
 }

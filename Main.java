@@ -423,7 +423,7 @@ public class Main {
                 SwingUtilities.invokeLater(() -> {
                     Music bgm = new Music("music//bgm.wav", false);
                     bgm.start();
-                    new Quest(category, mainFrame.getSize()).setVisible(true);
+                    new Quest(category, mainFrame.getSize(), username, this).setVisible(true);
                     mainFrame.dispose();
                 });
             });
@@ -725,6 +725,32 @@ public class Main {
     private int getUserScore(String username) {
         // Logika untuk mendapatkan skor pengguna dari leaderboard atau database
         return 100; // Contoh nilai
+    }
+
+    public void addScoreToLeaderboard(String playerName, int score) {
+        // Tambahkan skor pemain ke leaderboard
+        leaderboardData.add(new PlayerScore(playerName, score));
+    }
+
+    public void handleQuizCompletion(String username, int score) {
+        // Menyimpan skor ke leaderboard
+        addScoreToLeaderboard(username, score);
+
+        // Tampilkan leaderboard
+        showMainScreen(username); // Atau metode lain untuk menampilkan leaderboard
+    }
+
+    public void endQuiz(String playerName, int score) {
+        // Tambahkan skor pemain ke leaderboard
+        addScoreToLeaderboard(playerName, score);
+
+        // Tampilkan leaderboard atau perbarui tampilan
+        showMainScreen(playerName); // Atau metode lain untuk menampilkan leaderboard
+    }
+
+    public void showSomeMethod(String username) {
+        Quest quest = new Quest("Category", new Dimension(800, 600), username, this); // Pass username
+        quest.setVisible(true);
     }
 
 }
