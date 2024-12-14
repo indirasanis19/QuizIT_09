@@ -323,29 +323,18 @@ public class Main {
         contentPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         contentPanel.setLayout(new GridLayout(1, 1));
 
-        JPanel searchPanel = new JPanel(new BorderLayout());
-        searchPanel.setPreferredSize(new Dimension(550, 30));
-        searchPanel.setBackground(Color.WHITE);
-        searchPanel.setBorder(new CustomRoundedBorder(10, Color.GRAY));
+        JPanel kategorilabelpanel = new JPanel();
+        kategorilabelpanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        kategorilabelpanel.setBackground(Color.WHITE);
 
-        JTextField searchField = new JTextField();
-        searchField.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 35));
-        searchField.setPreferredSize(new Dimension(500, 30));
-
-        ImageIcon searchIcon = new ImageIcon("Image\\search-outline.png");
-        JLabel searchIconLabel = new JLabel(searchIcon);
-        searchIconLabel.setPreferredSize(new Dimension(30, 30));
-        searchIconLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        searchIconLabel.setBackground(Color.WHITE);
-        searchIconLabel.setOpaque(true);
-
-        searchPanel.add(searchField, BorderLayout.CENTER);
-        searchPanel.add(searchIconLabel, BorderLayout.EAST);
+        JLabel kategori = new JLabel("Categories");
+        kategori.setFont(new Font("Arial", Font.BOLD, 30));
+        kategorilabelpanel.add(kategori);
 
         JPanel leftContentPanel = new JPanel(new BorderLayout());
         leftContentPanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 15, 15));
         leftContentPanel.setBackground(Color.WHITE);
-        leftContentPanel.add(searchPanel, BorderLayout.NORTH);
+        leftContentPanel.add(kategorilabelpanel, BorderLayout.NORTH);
 
         JPanel categoriesPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         categoriesPanel.setBackground(Color.WHITE);
@@ -573,7 +562,7 @@ public class Main {
     private Object[][] getLeaderboardData() {
         List<Object[]> leaderboardData = dataLeaderboard();
         if (leaderboardData == null || leaderboardData.isEmpty()) {
-            return new Object[][]{};
+            return new Object[][] {};
         }
 
         Object[][] data = new Object[leaderboardData.size()][3];
@@ -584,30 +573,30 @@ public class Main {
             data[i][2] = row[1];
         }
         return data;
-    }    
+    }
 
     private List<Object[]> dataLeaderboard() {
         List<Object[]> leaderboard = new ArrayList<>();
-    
+
         String query = "SELECT nama, skor_tertinggi FROM pemain ORDER BY skor_tertinggi DESC LIMIT 10";
-    
+
         try (Connection connection = Koneksi.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()) {
-    
+                PreparedStatement stmt = connection.prepareStatement(query);
+                ResultSet rs = stmt.executeQuery()) {
+
             while (rs.next()) {
                 String name = rs.getString("nama");
                 int score = rs.getInt("skor_tertinggi");
-                leaderboard.add(new Object[]{name, score});
+                leaderboard.add(new Object[] { name, score });
             }
-    
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    
+
         return leaderboard;
     }
-    
+
     public void showProfileScreen(String username) {
         username = currentUser;
         mainFrame.getContentPane().removeAll();
@@ -633,7 +622,7 @@ public class Main {
         JLabel lastScoreLabel = new JLabel("Last Score: " + (playerData != null ? playerData[1] : 0));
         lastScoreLabel.setFont(new Font("Arial", Font.PLAIN, 40));
         lastScoreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-    
+
         JLabel highScoreLabel = new JLabel("High Score: " + (playerData != null ? playerData[2] : 0));
         highScoreLabel.setFont(new Font("Arial", Font.PLAIN, 40));
         highScoreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
