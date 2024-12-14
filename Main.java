@@ -147,55 +147,55 @@ public class Main {
         regPanel.setLayout(new BoxLayout(regPanel, BoxLayout.Y_AXIS));
         regPanel.setBackground(Color.WHITE);
         regPanel.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
-    
+
         JLabel regLabel = new JLabel("Register", SwingConstants.CENTER);
         regLabel.setFont(new Font("Arial", Font.BOLD, 36));
         regLabel.setForeground(Color.ORANGE);
         regLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-    
+
         JLabel enterNameLabel = new JLabel("Enter Name / Username:", SwingConstants.CENTER);
         enterNameLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         enterNameLabel.setForeground(Color.GRAY);
         enterNameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-    
+
         JTextField nameField = new JTextField("");
         nameField.setFont(new Font("Arial", Font.PLAIN, 16));
         nameField.setForeground(Color.GRAY);
         nameField.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 2));
         nameField.setMaximumSize(new Dimension(300, 40));
         nameField.setAlignmentX(Component.CENTER_ALIGNMENT);
-    
+
         JLabel enterPassword = new JLabel("Enter Password :", SwingConstants.CENTER);
         enterPassword.setFont(new Font("Arial", Font.PLAIN, 18));
         enterPassword.setForeground(Color.GRAY);
         enterPassword.setAlignmentX(Component.CENTER_ALIGNMENT);
-    
+
         JPasswordField pwField = new JPasswordField();
         pwField.setFont(new Font("Arial", Font.PLAIN, 16));
         pwField.setForeground(Color.GRAY);
         pwField.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 2));
         pwField.setMaximumSize(new Dimension(300, 40));
         pwField.setAlignmentX(Component.CENTER_ALIGNMENT);
-    
+
         JLabel confirmPasswordLabel = new JLabel("Confirm Password :", SwingConstants.CENTER);
         confirmPasswordLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         confirmPasswordLabel.setForeground(Color.GRAY);
         confirmPasswordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-    
+
         JPasswordField confirmPwField = new JPasswordField();
         confirmPwField.setFont(new Font("Arial", Font.PLAIN, 16));
         confirmPwField.setForeground(Color.GRAY);
         confirmPwField.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 2));
         confirmPwField.setMaximumSize(new Dimension(300, 40));
         confirmPwField.setAlignmentX(Component.CENTER_ALIGNMENT);
-    
+
         JButton registerButton = new JButton("Register");
         registerButton.setFont(new Font("Arial", Font.BOLD, 18));
         registerButton.setForeground(Color.WHITE);
         registerButton.setBackground(new Color(46, 7, 63));
         registerButton.setFocusPainted(false);
         registerButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-    
+
         JButton backButton = new JButton("Back to Login");
         backButton.setFont(new Font("Arial", Font.BOLD, 18));
         backButton.setForeground(Color.WHITE);
@@ -208,25 +208,25 @@ public class Main {
             String username = nameField.getText().trim();
             char[] passwordChars = pwField.getPassword();
             char[] confirmPasswordChars = confirmPwField.getPassword();
-        
+
             String password = new String(passwordChars); // Mengonversi ke String
             String confirmPassword = new String(confirmPasswordChars);
-        
+
             if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
                 JOptionPane.showMessageDialog(welcomeFrame,
                         "Username/password cannot be empty",
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
             } else {
-                UserAuth.register(username, password, confirmPassword); // Panggil metode register sesuai implementasi Anda
+                UserAuth.register(username, password, confirmPassword); // Panggil metode register sesuai implementasi
+                                                                        // Anda
             }
-        
+
             // Membersihkan data password untuk keamanan
             java.util.Arrays.fill(passwordChars, ' ');
             java.util.Arrays.fill(confirmPasswordChars, ' ');
         });
-        
-    
+
         // Event untuk tombol back
         backButton.addActionListener(e -> {
             welcomeFrame.getContentPane().removeAll(); // Menghapus semua komponen yang ada
@@ -234,7 +234,7 @@ public class Main {
             welcomeFrame.revalidate();
             welcomeFrame.repaint();
         });
-    
+
         regPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         regPanel.add(regLabel);
         regPanel.add(Box.createRigidArea(new Dimension(0, 20)));
@@ -253,11 +253,11 @@ public class Main {
         regPanel.add(registerButton);
         regPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         regPanel.add(backButton);
-    
+
         welcomeFrame.add(regPanel); // Menambahkan panel ke frame
         welcomeFrame.revalidate();
         welcomeFrame.repaint();
-    }    
+    }
 
     public void showMainScreen(String username) {
         // Frame untuk layar utama
@@ -498,7 +498,7 @@ public class Main {
 
         // Tabel leaderboard (rank, player, score)
         String[] columnNames = { "Rank", "Player", "Score" };
-        Object[][] data = getLeaderboardData(); // Mendapatkan data leaderboard yang diperbarui
+        Object[][] data = getLeaderboardData();
 
         JTable leaderboardTable = new JTable(data, columnNames);
         leaderboardTable.setFillsViewportHeight(true);
