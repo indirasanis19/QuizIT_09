@@ -15,7 +15,7 @@ public class Quest extends JFrame {
     private boolean isAnswered = false;
     private StepProgressBar progressBar;
     private Timer timer;
-    private int timeLeft = 600;
+    private int timeLeft = 10;
     private JLabel timerLabel;
     private JPanel startPanel;
     private int score = 0;
@@ -342,7 +342,7 @@ public class Quest extends JFrame {
     public void updatePlayerScore(String username, int newScore) {
         String query = "UPDATE pemain SET skor_terakhir = ?, skor_tertinggi = GREATEST(skor_tertinggi, ?) WHERE nama = ?";
         try (Connection connection = Koneksi.getConnection();
-         PreparedStatement stmt = connection.prepareStatement(query)) {
+                PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, newScore);
             stmt.setInt(2, newScore);
             stmt.setString(3, username);
