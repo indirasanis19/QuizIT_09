@@ -15,7 +15,7 @@ public class Music extends Thread {
         try {
             File soundFile = new File(filePath);
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
-            Clip clip = AudioSystem.getClip();
+            clip = AudioSystem.getClip();
             clip.open(audioStream);
             clip.start();
             clip.drain();

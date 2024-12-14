@@ -15,7 +15,7 @@ public class Quest extends JFrame {
     private boolean isAnswered = false;
     private StepProgressBar progressBar;
     private Timer timer;
-    private int timeLeft = 600;
+    private int timeLeft = 10;
     private JLabel timerLabel;
     private JPanel startPanel;
     private int score = 0;
